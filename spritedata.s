@@ -35,6 +35,7 @@ SPRITE2:
 	.byte	%00000010
 	.byte	%00000010
 
+
 SPRITE3:
 	.byte	%01010000		; Two pixel shift
 	.byte	%00010000		; (reversed)
@@ -54,6 +55,7 @@ SPRITE4:
 	.byte	%00001000
 	.byte	%00001000
 	.byte	%00001010
+
 
 SPRITE5:
 	.byte	%01000000		; Three pixel shift
@@ -75,6 +77,7 @@ SPRITE6:
 	.byte	%00100000
 	.byte	%00101010
 
+
 SPRITE7:
 	.byte	%00101010		; Four pixel shift
 	.byte	%00000010		; (reversed)
@@ -94,6 +97,7 @@ SPRITE8:
 	.byte	%00000001
 	.byte	%00000001
 	.byte	%00000001
+
 
 SPRITE9:
 	.byte	%00101000		; Five pixel shift
@@ -115,6 +119,7 @@ SPRITE10:
 	.byte	%00000100
 	.byte	%00000101
 
+
 SPRITE11:
 	.byte	%00100000		; Six pixel shift
 	.byte	%00100000		; (2nd byte, reversed)
@@ -134,6 +139,7 @@ SPRITE12:
 	.byte	%00010000
 	.byte	%00010000
 	.byte	%00010101
+
 
 BLACK:
 	.byte	%00000000

@@ -11,6 +11,7 @@
 		707005BF1D3EC7FD00623A10 /* hgrtest.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = hgrtest.s; sourceTree = "<group>"; };
 		707005C01D3FD65900623A10 /* hgrtable.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = hgrtable.s; sourceTree = "<group>"; };
 		7090ABA91D4012A600F02EAA /* spritedata.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = spritedata.s; sourceTree = "<group>"; };
+		7090ABAA1D407B8100F02EAA /* spritegen.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = spritegen.s; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -20,6 +21,7 @@
 				707005BE1D3EC75F00623A10 /* Makefile */,
 				707005BF1D3EC7FD00623A10 /* hgrtest.s */,
 				7090ABA91D4012A600F02EAA /* spritedata.s */,
+				7090ABAA1D407B8100F02EAA /* spritegen.s */,
 				707005C01D3FD65900623A10 /* hgrtable.s */,
 			);
 			sourceTree = "<group>";

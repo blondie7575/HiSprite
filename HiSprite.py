@@ -3,7 +3,7 @@
 import sys,os,png
 
 class Colors:
-	black,magenta = range(2)
+	black,magenta,green = range(3)
 	
 	
 def main(argv):
@@ -27,26 +27,37 @@ def main(argv):
 	
 	for shift in range(7):
 		for phase in range(2):
-			if shift==0 and phase>0:
-				continue
 				
 			for row in range(height):
 				for col in range(width):
-					(pixelr,pixelg,pixelb,half) = pixelRemap(pixeldata,row,col,width,shift,phase)
+					(color,half) = pixelRemap(pixeldata,row,col,width,shift,phase)
+					bitmap[row][col] = color
 			
-					if pixelr==255 and pixelg==0 and pixelb==255:
-						bitmap[row][col] = Colors.magenta
-					else:
-						bitmap[row][col] = Colors.black
-			
-			spriteNum = max(0,shift*2-1+phase)
-			printBitmap(bitmap,os.path.splitext(pngfile)[0].upper(),spriteNum,half,0)						
+			spriteNum = shift*2+phase
+			printBitmap(bitmap,os.path.splitext(pngfile)[0].upper(),spriteNum,half,0,phase)						
 
+	
+
+def pixelColor(pixeldata,row,col):
+	r = pixeldata[row][col*3]
+	g = pixeldata[row][col*3+1]
+	b = pixeldata[row][col*3+2]
+	color = Colors.black
+	
+	if r==255 and g==0 and b==255:
+		color = Colors.magenta
+	else:
+		if r==0 and g==255 and b==0:
+			color = Colors.green
+
+	return color
 	
 
 def pixelRemap(pixeldata,row,col,width,shift,phase):
 	halfPixel = 0
 	overHalf = 0
+
+	origColor = pixelColor(pixeldata,row,col)
 	
 	if shift>=width:
 		overHalf = 1
@@ -58,37 +69,40 @@ def pixelRemap(pixeldata,row,col,width,shift,phase):
 		col = col+shift
 	else:
 		col = col-(width-shift)
+		if origColor==Colors.green:
+			col = col+1
 		if not overHalf:
 			halfPixel = -1
-
 					
 	if col >= width or col<0:
-		return (0,0,0,halfPixel)
-		
-	r = pixeldata[row][col*3]
-	g = pixeldata[row][col*3+1]
-	b = pixeldata[row][col*3+2]
-			
-	return (r,g,b,halfPixel)
+		return (Colors.black,halfPixel)
+	
+	remapColor = pixelColor(pixeldata,row,col)
+	return (remapColor,halfPixel)
 	
 			
 def colorString(color,currByteString):
-	if len(currByteString) > 6:
-		if color==Colors.magenta:
-			return '1'
-		else:
-			return '0'
-	else:	
-		if color==Colors.magenta:
-			return '10'
+	if color==Colors.magenta:
+		return 'ba'
+	else:
+		if color==Colors.green:
+			return 'ab'
 	
 	return '00'
 	
-		
-def printBitmap(bitmap,label,shift,halfShift,highbit):
-	print "%s%d:" % (label,shift)
+
+def containsGreen(row):
+	for col in range(len(row)):
+		if row[col] == Colors.green:
+			return 1
+			
+	return 0
+	
+				
+def printBitmap(bitmap,label,spriteNum,halfShift,highbit,phase):
+	print "%s%d:" % (label,spriteNum)
 	for row in range(len(bitmap)):
-		byteString = "%d" % highbit
+		byteString = ""
 		 
 		for col in range(len(bitmap[0])):
 			append = colorString(bitmap[row][col],byteString)
@@ -99,8 +113,14 @@ def printBitmap(bitmap,label,shift,halfShift,highbit):
 		else:
 			if halfShift<0:
 				byteString = byteString[1:] + "0"
-			
-		sys.stdout.write("\t.byte\t%%%s\n" % byteString);
+		
+		if len(byteString)>6:
+			byteString = byteString[:-1]
+		
+#		if phase==0:
+#			byteString = byteString[::-1]
+				
+		sys.stdout.write("\t.byte\t%%%d%s\n" % (highbit,byteString));
 
 	sys.stdout.write('\n\n')			
 	sys.stdout.flush()

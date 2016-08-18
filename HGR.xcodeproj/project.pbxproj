@@ -10,8 +10,12 @@
 		707005BE1D3EC75F00623A10 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		707005BF1D3EC7FD00623A10 /* hgrtest.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = hgrtest.s; sourceTree = "<group>"; };
 		707005C01D3FD65900623A10 /* hgrtable.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = hgrtable.s; sourceTree = "<group>"; };
-		7090ABA91D4012A600F02EAA /* spritedata.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = spritedata.s; sourceTree = "<group>"; };
-		7090ABAA1D407B8100F02EAA /* spritegen.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = spritegen.s; sourceTree = "<group>"; };
+		7090ABA91D4012A600F02EAA /* spritedata0.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = spritedata0.s; sourceTree = "<group>"; };
+		7090ABAB1D41663400F02EAA /* scratch.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = scratch.s; sourceTree = "<group>"; };
+		7090ABAC1D418B8900F02EAA /* spritegen0.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = spritegen0.s; sourceTree = "<group>"; };
+		7090ABAD1D418B8900F02EAA /* spritegen1.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = spritegen1.s; sourceTree = "<group>"; };
+		7090ABAE1D419C3E00F02EAA /* spritedata1.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = spritedata1.s; sourceTree = "<group>"; };
+		7090ABAF1D453FDC00F02EAA /* hgrtable2.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = hgrtable2.s; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -20,9 +24,13 @@
 			children = (
 				707005BE1D3EC75F00623A10 /* Makefile */,
 				707005BF1D3EC7FD00623A10 /* hgrtest.s */,
-				7090ABA91D4012A600F02EAA /* spritedata.s */,
-				7090ABAA1D407B8100F02EAA /* spritegen.s */,
+				7090ABAB1D41663400F02EAA /* scratch.s */,
+				7090ABA91D4012A600F02EAA /* spritedata0.s */,
+				7090ABAE1D419C3E00F02EAA /* spritedata1.s */,
+				7090ABAC1D418B8900F02EAA /* spritegen0.s */,
+				7090ABAD1D418B8900F02EAA /* spritegen1.s */,
 				707005C01D3FD65900623A10 /* hgrtable.s */,
+				7090ABAF1D453FDC00F02EAA /* hgrtable2.s */,
 			);
 			sourceTree = "<group>";
 		};

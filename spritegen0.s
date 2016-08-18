@@ -1,0 +1,210 @@
+BOX_MAG_SHIFT0_CHUNK0:
+.byte %01010101	
+.byte %01000001	
+.byte %01000001	
+.byte %01000001	
+.byte %01000001	
+.byte %01000001	
+.byte %01000001	
+.byte %01010101	
+
+BOX_MAG_SHIFT0_CHUNK1:
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+
+BOX_MAG_SHIFT0_CHUNK2:
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+
+BOX_MAG_SHIFT1_CHUNK0:
+.byte %01010100	
+.byte %00000100	
+.byte %00000100	
+.byte %00000100	
+.byte %00000100	
+.byte %00000100	
+.byte %00000100	
+.byte %01010100	
+
+BOX_MAG_SHIFT1_CHUNK1:
+.byte %00000010	
+.byte %00000010	
+.byte %00000010	
+.byte %00000010	
+.byte %00000010	
+.byte %00000010	
+.byte %00000010	
+.byte %00000010	
+
+BOX_MAG_SHIFT1_CHUNK2:
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+
+BOX_MAG_SHIFT2_CHUNK0:
+.byte %01010000	
+.byte %00010000	
+.byte %00010000	
+.byte %00010000	
+.byte %00010000	
+.byte %00010000	
+.byte %00010000	
+.byte %01010000	
+
+BOX_MAG_SHIFT2_CHUNK1:
+.byte %00001010	
+.byte %00001000	
+.byte %00001000	
+.byte %00001000	
+.byte %00001000	
+.byte %00001000	
+.byte %00001000	
+.byte %00001010	
+
+BOX_MAG_SHIFT2_CHUNK2:
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+
+BOX_MAG_SHIFT3_CHUNK0:
+.byte %01000000	
+.byte %01000000	
+.byte %01000000	
+.byte %01000000	
+.byte %01000000	
+.byte %01000000	
+.byte %01000000	
+.byte %01000000	
+
+BOX_MAG_SHIFT3_CHUNK1:
+.byte %00101010	
+.byte %00100000	
+.byte %00100000	
+.byte %00100000	
+.byte %00100000	
+.byte %00100000	
+.byte %00100000	
+.byte %00101010	
+
+BOX_MAG_SHIFT3_CHUNK2:
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+
+BOX_MAG_SHIFT4_CHUNK0:
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+
+BOX_MAG_SHIFT4_CHUNK1:
+.byte %00101010	
+.byte %00000010	
+.byte %00000010	
+.byte %00000010	
+.byte %00000010	
+.byte %00000010	
+.byte %00000010	
+.byte %00101010	
+
+BOX_MAG_SHIFT4_CHUNK2:
+.byte %00000001	
+.byte %00000001	
+.byte %00000001	
+.byte %00000001	
+.byte %00000001	
+.byte %00000001	
+.byte %00000001	
+.byte %00000001	
+
+BOX_MAG_SHIFT5_CHUNK0:
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+
+BOX_MAG_SHIFT5_CHUNK1:
+.byte %00101000	
+.byte %00001000	
+.byte %00001000	
+.byte %00001000	
+.byte %00001000	
+.byte %00001000	
+.byte %00001000	
+.byte %00101000	
+
+BOX_MAG_SHIFT5_CHUNK2:
+.byte %00000101	
+.byte %00000100	
+.byte %00000100	
+.byte %00000100	
+.byte %00000100	
+.byte %00000100	
+.byte %00000100	
+.byte %00000101	
+
+BOX_MAG_SHIFT6_CHUNK0:
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+.byte %00000000	
+
+BOX_MAG_SHIFT6_CHUNK1:
+.byte %00100000	
+.byte %00100000	
+.byte %00100000	
+.byte %00100000	
+.byte %00100000	
+.byte %00100000	
+.byte %00100000	
+.byte %00100000	
+
+BOX_MAG_SHIFT6_CHUNK2:
+.byte %00010101	
+.byte %00010000	
+.byte %00010000	
+.byte %00010000	
+.byte %00010000	
+.byte %00010000	
+.byte %00010000	
+.byte %00010101	
+

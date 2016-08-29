@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
+		70166CF81D6E2BE1002F1334 /* macros.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = macros.s; sourceTree = "<group>"; };
 		707005BE1D3EC75F00623A10 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		707005BF1D3EC7FD00623A10 /* hgrtest.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = hgrtest.s; sourceTree = "<group>"; };
 		707005C01D3FD65900623A10 /* hgrtable.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = hgrtable.s; sourceTree = "<group>"; };
@@ -24,6 +25,7 @@
 			children = (
 				707005BE1D3EC75F00623A10 /* Makefile */,
 				707005BF1D3EC7FD00623A10 /* hgrtest.s */,
+				70166CF81D6E2BE1002F1334 /* macros.s */,
 				7090ABAB1D41663400F02EAA /* scratch.s */,
 				7090ABA91D4012A600F02EAA /* spritedata0.s */,
 				7090ABAE1D419C3E00F02EAA /* spritedata1.s */,

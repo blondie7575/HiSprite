@@ -23,15 +23,19 @@ def main(argv):
 
 	width = pngdata[0]
 	height = pngdata[1]
-	pixeldata = pngdata[2]
-		
+	pixeldata = pngdata[2]	
+	byteWidth = width/2+1+1	 # TODO: Calculate a power of two for this
+	
 	for shift in range(0,7):
+		print "%s_SHIFT%d: ;%d bytes per row" % (os.path.splitext(pngfile)[0].upper(),shift,byteWidth)
 		
 		spriteChunks = layoutSpriteChunk(pixeldata,width,height,shift)
-	
-		for chunkIndex in range(len(spriteChunks)):
-			print "%s_SHIFT%d_CHUNK%d:" % (os.path.splitext(pngfile)[0].upper(),shift,chunkIndex)
-			print spriteChunks[chunkIndex]			
+		
+		for row in range(height):
+			for chunkIndex in range(len(spriteChunks)):
+				print spriteChunks[chunkIndex][row]
+			
+		print "\n"				
 			
 		
 	
@@ -40,8 +44,8 @@ def layoutSpriteChunk(pixeldata,width,height,shift):
 
 	bitmap = [[0 for x in range(width)] for y in range(height)]
 	
-	byteWidth = width/2+1
-	spriteChunks = ["" for x in range(byteWidth)]
+	byteWidth = width/2+1+1	 # TODO: Calculate a power of two for this
+	spriteChunks = [["" for y in range(height)] for x in range(byteWidth)]
 
 	for row in range(height):
 		pixelRow = bitmap[row]
@@ -83,7 +87,7 @@ def layoutSpriteChunk(pixeldata,width,height,shift):
 			bitPos += 7
 				
 		for chunkIndex in range(len(byteSplits)):
-			spriteChunks[chunkIndex] += ".byte %%%s\t\n" % byteSplits[chunkIndex]
+			spriteChunks[chunkIndex][row] = ".byte %%%s" % byteSplits[chunkIndex]
 	
 	return spriteChunks
 				
@@ -140,7 +144,7 @@ def printHorzontalLookup():
 
 	print "\nHGRROWS_BITSHIFT_GRN:"
 	for pixel in range(140):
-		print "\t.byte $%02x" % ((pixel % 7)*24)
+		print "\t.byte $%02x" % ((pixel % 7)*32) # 32 = 4 shifts of 8 bytes
 		
 		
 def usage():

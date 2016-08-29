@@ -142,142 +142,142 @@ HGRROWS_GRN:
 
 HGRROWS_BITSHIFT_GRN:
 	.byte $00
-	.byte $18
-	.byte $30
-	.byte $48
+	.byte $20
+	.byte $40
 	.byte $60
-	.byte $78
-	.byte $90
+	.byte $80
+	.byte $a0
+	.byte $c0
 	.byte $00
-	.byte $18
-	.byte $30
-	.byte $48
+	.byte $20
+	.byte $40
 	.byte $60
-	.byte $78
-	.byte $90
+	.byte $80
+	.byte $a0
+	.byte $c0
 	.byte $00
-	.byte $18
-	.byte $30
-	.byte $48
+	.byte $20
+	.byte $40
 	.byte $60
-	.byte $78
-	.byte $90
+	.byte $80
+	.byte $a0
+	.byte $c0
 	.byte $00
-	.byte $18
-	.byte $30
-	.byte $48
+	.byte $20
+	.byte $40
 	.byte $60
-	.byte $78
-	.byte $90
+	.byte $80
+	.byte $a0
+	.byte $c0
 	.byte $00
-	.byte $18
-	.byte $30
-	.byte $48
+	.byte $20
+	.byte $40
 	.byte $60
-	.byte $78
-	.byte $90
+	.byte $80
+	.byte $a0
+	.byte $c0
 	.byte $00
-	.byte $18
-	.byte $30
-	.byte $48
+	.byte $20
+	.byte $40
 	.byte $60
-	.byte $78
-	.byte $90
+	.byte $80
+	.byte $a0
+	.byte $c0
 	.byte $00
-	.byte $18
-	.byte $30
-	.byte $48
+	.byte $20
+	.byte $40
 	.byte $60
-	.byte $78
-	.byte $90
+	.byte $80
+	.byte $a0
+	.byte $c0
 	.byte $00
-	.byte $18
-	.byte $30
-	.byte $48
+	.byte $20
+	.byte $40
 	.byte $60
-	.byte $78
-	.byte $90
+	.byte $80
+	.byte $a0
+	.byte $c0
 	.byte $00
-	.byte $18
-	.byte $30
-	.byte $48
+	.byte $20
+	.byte $40
 	.byte $60
-	.byte $78
-	.byte $90
+	.byte $80
+	.byte $a0
+	.byte $c0
 	.byte $00
-	.byte $18
-	.byte $30
-	.byte $48
+	.byte $20
+	.byte $40
 	.byte $60
-	.byte $78
-	.byte $90
+	.byte $80
+	.byte $a0
+	.byte $c0
 	.byte $00
-	.byte $18
-	.byte $30
-	.byte $48
+	.byte $20
+	.byte $40
 	.byte $60
-	.byte $78
-	.byte $90
+	.byte $80
+	.byte $a0
+	.byte $c0
 	.byte $00
-	.byte $18
-	.byte $30
-	.byte $48
+	.byte $20
+	.byte $40
 	.byte $60
-	.byte $78
-	.byte $90
+	.byte $80
+	.byte $a0
+	.byte $c0
 	.byte $00
-	.byte $18
-	.byte $30
-	.byte $48
+	.byte $20
+	.byte $40
 	.byte $60
-	.byte $78
-	.byte $90
+	.byte $80
+	.byte $a0
+	.byte $c0
 	.byte $00
-	.byte $18
-	.byte $30
-	.byte $48
+	.byte $20
+	.byte $40
 	.byte $60
-	.byte $78
-	.byte $90
+	.byte $80
+	.byte $a0
+	.byte $c0
 	.byte $00
-	.byte $18
-	.byte $30
-	.byte $48
+	.byte $20
+	.byte $40
 	.byte $60
-	.byte $78
-	.byte $90
+	.byte $80
+	.byte $a0
+	.byte $c0
 	.byte $00
-	.byte $18
-	.byte $30
-	.byte $48
+	.byte $20
+	.byte $40
 	.byte $60
-	.byte $78
-	.byte $90
+	.byte $80
+	.byte $a0
+	.byte $c0
 	.byte $00
-	.byte $18
-	.byte $30
-	.byte $48
+	.byte $20
+	.byte $40
 	.byte $60
-	.byte $78
-	.byte $90
+	.byte $80
+	.byte $a0
+	.byte $c0
 	.byte $00
-	.byte $18
-	.byte $30
-	.byte $48
+	.byte $20
+	.byte $40
 	.byte $60
-	.byte $78
-	.byte $90
+	.byte $80
+	.byte $a0
+	.byte $c0
 	.byte $00
-	.byte $18
-	.byte $30
-	.byte $48
+	.byte $20
+	.byte $40
 	.byte $60
-	.byte $78
-	.byte $90
+	.byte $80
+	.byte $a0
+	.byte $c0
 	.byte $00
-	.byte $18
-	.byte $30
-	.byte $48
+	.byte $20
+	.byte $40
 	.byte $60
-	.byte $78
-	.byte $90
+	.byte $80
+	.byte $a0
+	.byte $c0

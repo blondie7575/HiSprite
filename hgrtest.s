@@ -8,6 +8,7 @@
 
 .org $6000
 
+.include "macros.s"
 
 ; Softswitches
 TEXT = $c050
@@ -17,7 +18,7 @@ HIRES2 = $c058
 
 ; ROM entry points
 COUT = $fded
-
+ROMWAIT = $fca8
 
 ; Zero page locations we use (unused by Monitor, Applesoft, or ProDOS)
 PARAM0			= $06
@@ -63,21 +64,31 @@ SCRATCH1		= $1a
 main:
 	jsr EnableHires
 
-loop:
 	lda #$00
 	jsr LinearFill
 
 .if 1
-	ldx #1
-	stx PARAM0
+
+	ldx #0
+loop:
+	txa
+	asl
+	asl
+	sta PARAM0
 	lda #80
 	sta PARAM1
-	lda #<BOX_MAG_SHIFT0_CHUNK0
+	lda #<BOX_MAG_SHIFT0
 	sta PARAM2
-	lda #>BOX_MAG_SHIFT0_CHUNK0
+	lda #>BOX_MAG_SHIFT0
 	sta PARAM3
 	jsr BlitSprite
 
+;	lda #$ff
+;	jsr ROMWAIT
+
+	inx
+	cpx #35
+	bne loop
 
 .endif
 .if 0
@@ -291,13 +302,15 @@ loop:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; BlitSprite
-; Trashes everything
+; Trashes everything, including parameters
 ; PARAM0: X Pos
 ; PARAM1: Y Pos
 ; PARAM2: Sprite Ptr LSB
 ; PARAM3: Sprite Ptr MSB
 ;
 BlitSprite:
+	SAVE_AXY
+
 	clc						; Compute sprite data base
 	ldx PARAM0
 	lda HGRROWS_BITSHIFT_GRN,x
@@ -307,30 +320,47 @@ BlitSprite:
 	adc PARAM3
 	sta PARAM3
 
-	ldy #7
+	lda #7
+	sta SCRATCH0			; Tracks row index
 
-blitSprite_loop:
-	clc						; Calculate Y line
-	tya
+	asl						; Multiply by byte width
+	asl
+	sta SCRATCH1			; Tracks total bytes
+	ldy #0
+
+blitSprite_Yloop:
+	clc						; Calculate Y line on screen
+	lda SCRATCH0
 	adc	PARAM1
 	tax
 
 	lda HGRROWS_H,x			; Compute hires row
 	sta blitSprite_smc+2	; Self-modifying code
+	sta blitSprite_smc+5
 	lda HGRROWS_L,x
 	sta blitSprite_smc+1
+	sta blitSprite_smc+4
 
 	ldx PARAM0				; Compute hires horizontal byte
 	lda HGRROWS_GRN,x
 	tax
 
+blitSprite_Xloop:
 	lda (PARAM2),y
 
 blitSprite_smc:
+	ora $2000,x
 	sta $2000,x
-	dey
-	bpl blitSprite_loop
+	inx
+	iny
+	tya						; End of row?
+	and #$03				; If last two bits are zero, we've wrapped a row
+	bne blitSprite_Xloop
 
+	dec SCRATCH0
+	bpl blitSprite_Yloop
+
+	RESTORE_AXY
 	rts
 
 

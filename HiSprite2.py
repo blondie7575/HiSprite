@@ -3,7 +3,7 @@
 import sys,os,png
 
 class Colors:
-	black,magenta,green = range(3)
+	black,magenta,green,orange,blue = range(5)
 
 
 
@@ -56,7 +56,7 @@ def layoutSpriteChunk(pixeldata,width,height,shift):
 			if pixel == Colors.black:
 				bitStream += "00"
 			else:
-				if pixel == Colors.green:
+				if pixel == Colors.green or pixel == Colors.orange:
 					bitStream += "01"
 				else:
 					bitStream += "10"
@@ -83,7 +83,11 @@ def layoutSpriteChunk(pixeldata,width,height,shift):
 		
 			bitChunk = bitChunk[::-1]
 				
-			byteSplits[byteIndex] = "0" + bitChunk
+			highBit = "0"
+			if pixel == Colors.orange or pixel == Colors.blue:
+				highBit = "1"
+				
+			byteSplits[byteIndex] = highBit + bitChunk
 			bitPos += 7
 				
 		for chunkIndex in range(len(byteSplits)):
@@ -126,6 +130,12 @@ def pixelColor(pixeldata,row,col):
 	else:
 		if r==0 and g==255 and b==0:
 			color = Colors.green
+		else:
+			if r==0 and g==0 and b==255:
+				color = Colors.blue
+			else:
+				if r==255 and g>0 and b==0:
+					color = Colors.orange
 
 	return color
 	

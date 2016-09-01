@@ -8,6 +8,8 @@
 
 /* Begin PBXFileReference section */
 		70166CF81D6E2BE1002F1334 /* macros.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = macros.s; sourceTree = "<group>"; };
+		70166CF91D78BD1B002F1334 /* spritegen2.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = spritegen2.s; sourceTree = "<group>"; };
+		70166CFA1D78BD1B002F1334 /* spritegen3.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = spritegen3.s; sourceTree = "<group>"; };
 		707005BE1D3EC75F00623A10 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		707005BF1D3EC7FD00623A10 /* hgrtest.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = hgrtest.s; sourceTree = "<group>"; };
 		707005C01D3FD65900623A10 /* hgrtable.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = hgrtable.s; sourceTree = "<group>"; };
@@ -31,6 +33,8 @@
 				7090ABAE1D419C3E00F02EAA /* spritedata1.s */,
 				7090ABAC1D418B8900F02EAA /* spritegen0.s */,
 				7090ABAD1D418B8900F02EAA /* spritegen1.s */,
+				70166CF91D78BD1B002F1334 /* spritegen2.s */,
+				70166CFA1D78BD1B002F1334 /* spritegen3.s */,
 				707005C01D3FD65900623A10 /* hgrtable.s */,
 				7090ABAF1D453FDC00F02EAA /* hgrtable2.s */,
 			);

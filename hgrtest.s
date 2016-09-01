@@ -83,6 +83,30 @@ loop:
 	sta PARAM3
 	jsr BlitSprite
 
+	lda #88
+	sta PARAM1
+	lda #<BOX_GRN_SHIFT0
+	sta PARAM2
+	lda #>BOX_GRN_SHIFT0
+	sta PARAM3
+	jsr BlitSprite
+
+	lda #96
+	sta PARAM1
+	lda #<BOX_BLU_SHIFT0
+	sta PARAM2
+	lda #>BOX_BLU_SHIFT0
+	sta PARAM3
+	jsr BlitSprite
+
+	lda #104
+	sta PARAM1
+	lda #<BOX_ORG_SHIFT0
+	sta PARAM2
+	lda #>BOX_ORG_SHIFT0
+	sta PARAM3
+	jsr BlitSprite
+
 ;	lda #$ff
 ;	jsr ROMWAIT
 
@@ -459,6 +483,8 @@ venetianFill_inner:
 .include "spritedata1.s"
 .include "spritegen0.s"
 .include "spritegen1.s"
+.include "spritegen2.s"
+.include "spritegen3.s"
 
 
 ; Suppress some linker warnings - Must be the last thing in the file

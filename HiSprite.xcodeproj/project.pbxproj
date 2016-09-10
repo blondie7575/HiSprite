@@ -7,87 +7,83 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		70166CF81D6E2BE1002F1334 /* macros.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = macros.s; sourceTree = "<group>"; };
-		70166CF91D78BD1B002F1334 /* spritegen2.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = spritegen2.s; sourceTree = "<group>"; };
-		70166CFA1D78BD1B002F1334 /* spritegen3.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = spritegen3.s; sourceTree = "<group>"; };
-		707005BE1D3EC75F00623A10 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
-		707005BF1D3EC7FD00623A10 /* hgrtest.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = hgrtest.s; sourceTree = "<group>"; };
-		707005C01D3FD65900623A10 /* hgrtable.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = hgrtable.s; sourceTree = "<group>"; };
-		7090ABA91D4012A600F02EAA /* spritedata0.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = spritedata0.s; sourceTree = "<group>"; };
-		7090ABAB1D41663400F02EAA /* scratch.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = scratch.s; sourceTree = "<group>"; };
-		7090ABAC1D418B8900F02EAA /* spritegen0.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = spritegen0.s; sourceTree = "<group>"; };
-		7090ABAD1D418B8900F02EAA /* spritegen1.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = spritegen1.s; sourceTree = "<group>"; };
-		7090ABAE1D419C3E00F02EAA /* spritedata1.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = spritedata1.s; sourceTree = "<group>"; };
-		7090ABAF1D453FDC00F02EAA /* hgrtable2.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = hgrtable2.s; sourceTree = "<group>"; };
+		701B5E0E1D84810000E6D330 /* macros.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = macros.s; sourceTree = "<group>"; };
+		701B5E0F1D84810000E6D330 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		701B5E101D84813500E6D330 /* hisprite.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = hisprite.s; sourceTree = "<group>"; };
+		701B5E111D84817500E6D330 /* HiSprite.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = HiSprite.py; sourceTree = "<group>"; };
+		701B5E121D8481C800E6D330 /* hgrtableX.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = hgrtableX.s; sourceTree = "<group>"; };
+		701B5E131D84820100E6D330 /* spritegen0.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = spritegen0.s; sourceTree = "<group>"; };
+		701B5E141D84823300E6D330 /* spritegen1.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = spritegen1.s; sourceTree = "<group>"; };
+		701B5E151D84823300E6D330 /* spritegen2.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = spritegen2.s; sourceTree = "<group>"; };
+		701B5E161D84823300E6D330 /* spritegen3.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = spritegen3.s; sourceTree = "<group>"; };
+		701B5E171D84824400E6D330 /* hgrtableY.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = hgrtableY.s; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
-		707005B31D3EC71C00623A10 = {
+		701B5E031D8480D200E6D330 = {
 			isa = PBXGroup;
 			children = (
-				707005BE1D3EC75F00623A10 /* Makefile */,
-				707005BF1D3EC7FD00623A10 /* hgrtest.s */,
-				70166CF81D6E2BE1002F1334 /* macros.s */,
-				7090ABAB1D41663400F02EAA /* scratch.s */,
-				7090ABA91D4012A600F02EAA /* spritedata0.s */,
-				7090ABAE1D419C3E00F02EAA /* spritedata1.s */,
-				7090ABAC1D418B8900F02EAA /* spritegen0.s */,
-				7090ABAD1D418B8900F02EAA /* spritegen1.s */,
-				70166CF91D78BD1B002F1334 /* spritegen2.s */,
-				70166CFA1D78BD1B002F1334 /* spritegen3.s */,
-				707005C01D3FD65900623A10 /* hgrtable.s */,
-				7090ABAF1D453FDC00F02EAA /* hgrtable2.s */,
+				701B5E0F1D84810000E6D330 /* Makefile */,
+				701B5E111D84817500E6D330 /* HiSprite.py */,
+				701B5E0E1D84810000E6D330 /* macros.s */,
+				701B5E101D84813500E6D330 /* hisprite.s */,
+				701B5E121D8481C800E6D330 /* hgrtableX.s */,
+				701B5E171D84824400E6D330 /* hgrtableY.s */,
+				701B5E131D84820100E6D330 /* spritegen0.s */,
+				701B5E141D84823300E6D330 /* spritegen1.s */,
+				701B5E151D84823300E6D330 /* spritegen2.s */,
+				701B5E161D84823300E6D330 /* spritegen3.s */,
 			);
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXLegacyTarget section */
-		707005B81D3EC71C00623A10 /* HGR */ = {
+		701B5E081D8480D200E6D330 /* HiSprite */ = {
 			isa = PBXLegacyTarget;
 			buildArgumentsString = "$(ACTION)";
-			buildConfigurationList = 707005BB1D3EC71C00623A10 /* Build configuration list for PBXLegacyTarget "HGR" */;
+			buildConfigurationList = 701B5E0B1D8480D200E6D330 /* Build configuration list for PBXLegacyTarget "HiSprite" */;
 			buildPhases = (
 			);
 			buildToolPath = /usr/bin/make;
 			dependencies = (
 			);
-			name = HGR;
+			name = HiSprite;
 			passBuildSettingsInEnvironment = 1;
-			productName = HGR;
+			productName = HiSprite;
 		};
 /* End PBXLegacyTarget section */
 
 /* Begin PBXProject section */
-		707005B41D3EC71C00623A10 /* Project object */ = {
+		701B5E041D8480D200E6D330 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "Quinn Dunki";
 				TargetAttributes = {
-					707005B81D3EC71C00623A10 = {
+					701B5E081D8480D200E6D330 = {
 						CreatedOnToolsVersion = 7.3.1;
 					};
 				};
 			};
-			buildConfigurationList = 707005B71D3EC71C00623A10 /* Build configuration list for PBXProject "HGR" */;
+			buildConfigurationList = 701B5E071D8480D200E6D330 /* Build configuration list for PBXProject "HiSprite" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 			);
-			mainGroup = 707005B31D3EC71C00623A10;
+			mainGroup = 701B5E031D8480D200E6D330;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				707005B81D3EC71C00623A10 /* HGR */,
+				701B5E081D8480D200E6D330 /* HiSprite */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin XCBuildConfiguration section */
-		707005B91D3EC71C00623A10 /* Debug */ = {
+		701B5E091D8480D200E6D330 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -128,7 +124,7 @@
 			};
 			name = Debug;
 		};
-		707005BA1D3EC71C00623A10 /* Release */ = {
+		701B5E0A1D8480D200E6D330 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -162,7 +158,7 @@
 			};
 			name = Release;
 		};
-		707005BC1D3EC71C00623A10 /* Debug */ = {
+		701B5E0C1D8480D200E6D330 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEBUGGING_SYMBOLS = YES;
@@ -175,7 +171,7 @@
 			};
 			name = Debug;
 		};
-		707005BD1D3EC71C00623A10 /* Release */ = {
+		701B5E0D1D8480D200E6D330 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -188,25 +184,25 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		707005B71D3EC71C00623A10 /* Build configuration list for PBXProject "HGR" */ = {
+		701B5E071D8480D200E6D330 /* Build configuration list for PBXProject "HiSprite" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				707005B91D3EC71C00623A10 /* Debug */,
-				707005BA1D3EC71C00623A10 /* Release */,
+				701B5E091D8480D200E6D330 /* Debug */,
+				701B5E0A1D8480D200E6D330 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		707005BB1D3EC71C00623A10 /* Build configuration list for PBXLegacyTarget "HGR" */ = {
+		701B5E0B1D8480D200E6D330 /* Build configuration list for PBXLegacyTarget "HiSprite" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				707005BC1D3EC71C00623A10 /* Debug */,
-				707005BD1D3EC71C00623A10 /* Release */,
+				701B5E0C1D8480D200E6D330 /* Debug */,
+				701B5E0D1D8480D200E6D330 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 707005B41D3EC71C00623A10 /* Project object */;
+	rootObject = 701B5E041D8480D200E6D330 /* Project object */;
 }

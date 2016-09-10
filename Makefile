@@ -13,7 +13,7 @@ CL65=cl65
 AC=AppleCommander.jar
 ADDR=6000
 
-PGM=hgrtest
+PGM=hisprite
 
 all: $(PGM)
 

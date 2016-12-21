@@ -1,5 +1,5 @@
 ;
-;  hgrtest.s
+;  hisprite.s
 ;
 ;  Created by Quinn Dunki on 7/19/16
 ;  Copyright (c) 2015 One Girl, One Laptop Productions. All rights reserved.
@@ -65,98 +65,106 @@ main:
 	jsr EnableHires
 
 	lda #$00
-	jsr LinearFill
+	jsr VenetianFill
 
 	ldx #0
+;;;;
+	stz PARAM0
+	stz PARAM1
+	jsr BOXW_MAG
+
+	lda #10
+	sta PARAM1
+	jsr BOXW_MIX
+
+	lda #20
+	sta PARAM1
+	jsr BOXW_ORG
+
+	rts
+;;;;
+
 loop:
 	txa
-	asl
-	asl
 	sta PARAM0
 	lda #0
 	sta PARAM1
-	jsr BOX_MAG
 
-	lda #88
-	sta PARAM1
-	jsr BOX_GRN
+	lda #<bgBuffer
+	sta PARAM2
+	lda #>bgBuffer
+	sta PARAM3
+	jsr SaveBackground
 
-	lda #96
-	sta PARAM1
-	jsr BOX_ORG
+	jsr BOXW_MAG
+	lda #$80
+	jsr ROMWAIT
 
-	lda #184
-	sta PARAM1
-	jsr BOX_BLU
-
-	inx
-	cpx #35
-	bne loop
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; EnableHires
-; Trashes A
-;
-EnableHires:
-	lda TEXT
-	lda HIRES1
-	lda HIRES2
-	rts
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; LinearFill
-; A: Byte value to fill
-; Trashes all registers
-;
-LinearFill:
-	ldx #0
-
-linearFill_outer:
-	pha
-	lda HGRROWS_H,x
-	sta linearFill_inner+2
-	lda HGRROWS_L,x
-	sta linearFill_inner+1
-	pla
-
-	ldy #39
-linearFill_inner:
-	sta $2000,y
-	dey
-	bpl linearFill_inner
+	jsr RestoreBackground
 
 	inx
-	cpx #192
-	bne linearFill_outer
+	cpx #133
+;	bne loop
 	rts
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; VenetianFill
-; A: Byte value to fill
-; Trashes all registers
-;
-VenetianFill:
-	ldx #$3f
-venetianFill_outer:
-	stx venetianFill_inner+2
-	ldy #$00
-venetianFill_inner:
-	sta $2000,y		; Upper byte of address is self-modified
-	iny
-	bne venetianFill_inner
-	dex
-	cpx #$1f
-	bne venetianFill_outer
-	rts
+bgBuffer:
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
 
-
+.include "graphics.s"
 .include "hgrtableX.s"
 .include "hgrtableY.s"
 .include "spritegen0.s"
 .include "spritegen1.s"
 .include "spritegen2.s"
 .include "spritegen3.s"
+.include "spritegen4.s"
 
 ; Suppress some linker warnings - Must be the last thing in the file
 .SEGMENT "ZPSAVE"

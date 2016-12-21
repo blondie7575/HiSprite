@@ -17,6 +17,8 @@
 		701B5E151D84823300E6D330 /* spritegen2.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = spritegen2.s; sourceTree = "<group>"; };
 		701B5E161D84823300E6D330 /* spritegen3.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = spritegen3.s; sourceTree = "<group>"; };
 		701B5E171D84824400E6D330 /* hgrtableY.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = hgrtableY.s; sourceTree = "<group>"; };
+		701B5E181D849F3800E6D330 /* graphics.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = graphics.s; sourceTree = "<group>"; };
+		70A65D491E0B137D00FB9D02 /* spritegen4.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = spritegen4.s; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -27,12 +29,14 @@
 				701B5E111D84817500E6D330 /* HiSprite.py */,
 				701B5E0E1D84810000E6D330 /* macros.s */,
 				701B5E101D84813500E6D330 /* hisprite.s */,
+				701B5E181D849F3800E6D330 /* graphics.s */,
 				701B5E121D8481C800E6D330 /* hgrtableX.s */,
 				701B5E171D84824400E6D330 /* hgrtableY.s */,
 				701B5E131D84820100E6D330 /* spritegen0.s */,
 				701B5E141D84823300E6D330 /* spritegen1.s */,
 				701B5E151D84823300E6D330 /* spritegen2.s */,
 				701B5E161D84823300E6D330 /* spritegen3.s */,
+				70A65D491E0B137D00FB9D02 /* spritegen4.s */,
 			);
 			sourceTree = "<group>";
 		};

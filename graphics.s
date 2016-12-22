@@ -43,11 +43,15 @@ saveBackground_loop:
 	sta saveBackground_smc1+2
 	sta saveBackground_smc2+2
 	sta saveBackground_smc3+2
+	sta saveBackground_smc4+2
+	sta saveBackground_smc5+2
 	lda HGRROWS_L,x
 	sta saveBackground_smc0+1
 	sta saveBackground_smc1+1
 	sta saveBackground_smc2+1
 	sta saveBackground_smc3+1
+	sta saveBackground_smc4+1
+	sta saveBackground_smc5+1
 
 	ldx PARAM0				; Compute hires column
 	lda DIV7_2,x
@@ -69,6 +73,16 @@ saveBackground_smc2:
 	iny
 	inx
 saveBackground_smc3:
+	lda $2000,x
+	sta (PARAM2),y
+	iny
+	inx
+saveBackground_smc4:
+	lda $2000,x
+	sta (PARAM2),y
+	iny
+	inx
+saveBackground_smc5:
 	lda $2000,x
 	sta (PARAM2),y
 	iny
@@ -112,11 +126,15 @@ restoreBackground_loop:
 	sta restoreBackground_smc1+2
 	sta restoreBackground_smc2+2
 	sta restoreBackground_smc3+2
+	sta restoreBackground_smc4+2
+	sta restoreBackground_smc5+2
 	lda HGRROWS_L,x
 	sta restoreBackground_smc0+1
 	sta restoreBackground_smc1+1
 	sta restoreBackground_smc2+1
 	sta restoreBackground_smc3+1
+	sta restoreBackground_smc4+1
+	sta restoreBackground_smc5+1
 
 	ldx PARAM0				; Compute hires column
 	lda DIV7_2,x
@@ -142,6 +160,18 @@ restoreBackground_smc2:
 
 	lda (PARAM2),y
 restoreBackground_smc3:
+	sta $2000,x
+	iny
+	inx
+
+	lda (PARAM2),y
+restoreBackground_smc4:
+	sta $2000,x
+	iny
+	inx
+
+	lda (PARAM2),y
+restoreBackground_smc5:
 	sta $2000,x
 	iny
 
@@ -203,3 +233,75 @@ venetianFill_inner:
 	bne venetianFill_outer
 	rts
 
+
+INBUF			= $0200
+DOSCMD			= $be03
+KBD				= $c000
+KBDSTRB			= $c010
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; CommandLine
+;
+; PARAM0: Command line string (LSB)
+; PARAM1: Command line string (MSB)
+;
+CommandLine:
+	SAVE_AXY
+	ldx #0
+	ldy #0
+
+CommandLine_loop:
+	lda (PARAM0),y
+	beq CommandLine_done
+	sta $0200,x						; Keyboard input buffer
+	inx
+	iny
+	bra CommandLine_loop
+
+CommandLine_done:
+	lda #$8d						; Terminate with return and null
+	sta $0200,x
+	inx
+	lda #0
+	sta $0200,x
+
+	jsr $be03						; ProDOS 8 entry point
+
+	RESTORE_AXY
+	rts
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; BloadHires
+;
+; PARAM0: Filename (LSB)
+; PARAM1: Filename (MSB)
+;
+; Max filename length: 16 chars!
+;
+BloadHires:
+	SAVE_AXY
+	ldx #0
+	ldy #0
+
+BloadHires_loop:
+	lda (PARAM0),y				; Copy filename into BLOAD buffer
+	beq BloadHires_done
+	sta BloadHires_buffer+6,x
+	inx
+	iny
+	bra BloadHires_loop
+
+BloadHires_done:
+	lda #<BloadHires_buffer
+	sta PARAM0
+	lda #>BloadHires_buffer
+	sta PARAM1
+	jsr CommandLine
+
+	RESTORE_AXY
+	rts
+
+BloadHires_buffer:
+	.byte "BLOAD ",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0

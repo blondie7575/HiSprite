@@ -123,11 +123,9 @@ def layoutSpriteChunk(pixeldata,width,height,shift):
 		for chunkIndex in range(len(byteSplits)):
 			
 			# Store byte into video memory
-			if (not byteSplits[chunkIndex].endswith("0000000")):	# Optimization- don't render all-black bytes
-				spriteChunks[chunkIndex][row] = \
-				"\tlda #%%%s\n" % byteSplits[chunkIndex] + \
-				"\tora (SCRATCH0),y\n" + \
-				"\tsta (SCRATCH0),y\n";
+			spriteChunks[chunkIndex][row] = \
+			"\tlda #%%%s\n" % byteSplits[chunkIndex] + \
+			"\tsta (SCRATCH0),y\n";
 			
 			# Increment indices
 			if chunkIndex == len(byteSplits)-1:

@@ -64,24 +64,31 @@ SCRATCH1		= $1a
 main:
 	jsr EnableHires
 
-	lda #$00
-	jsr VenetianFill
+;	lda #$00
+;	jsr VenetianFill
+
+	lda #<bgFilename
+	sta PARAM0
+	lda #>bgFilename
+	sta PARAM1
+	jsr BloadHires
+
 
 	ldx #0
 ;;;;
-	stz PARAM0
-	stz PARAM1
-	jsr BOXW_MAG
-
-	lda #10
-	sta PARAM1
-	jsr BOXW_MIX
-
-	lda #20
-	sta PARAM1
-	jsr BOXW_ORG
-
-	rts
+;	stz PARAM0
+;	stz PARAM1
+;	jsr BOXW_MAG
+;
+;	lda #10
+;	sta PARAM1
+;	jsr BOXW_MIX
+;
+;	lda #20
+;	sta PARAM1
+;	jsr BOXW_ORG
+;
+;	rts
 ;;;;
 
 loop:
@@ -104,7 +111,7 @@ loop:
 
 	inx
 	cpx #133
-;	bne loop
+	bne loop
 	rts
 
 bgBuffer:
@@ -156,6 +163,9 @@ bgBuffer:
 	.byte 0
 	.byte 0
 	.byte 0
+
+bgFilename:
+	.byte "KOL",0
 
 .include "graphics.s"
 .include "hgrtableX.s"

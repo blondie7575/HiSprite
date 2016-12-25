@@ -3,14 +3,14 @@
 import sys,os,png
 
 class Colors:
-	black,magenta,green,orange,blue,white = range(6)
+	black,magenta,green,orange,blue,white,key = range(7)
 
 
 
 def main(argv):
 	
 	if len(argv)<1:
-		printHorzontalLookup()
+		printHorizontalLookup()
 		exit(0)
 
 	pngfile = sys.argv[1]
@@ -23,7 +23,7 @@ def main(argv):
 
 	width = pngdata[0]
 	height = pngdata[1]
-	pixeldata = pngdata[2]	
+	pixelData = pngdata[2]	
 	byteWidth = width/2+1+1	 # TODO: Calculate a power of two for this
 	niceName = os.path.splitext(pngfile)[0].upper()
 	
@@ -49,43 +49,37 @@ def main(argv):
 		print "\tldx PARAM1"
 		print rowStartCalculatorCode();
 
-		spriteChunks = layoutSpriteChunk(pixeldata,width,height,shift)
+		spriteChunks = layoutSpriteChunk(pixelData,width,height,shift)
 		
 		for row in range(height):
 			for chunkIndex in range(len(spriteChunks)):
 				print spriteChunks[chunkIndex][row]
 			
 		print "\n"				
-			
-		
-	
 
-def layoutSpriteChunk(pixeldata,width,height,shift):
 
-	bitmap = [[0 for x in range(width)] for y in range(height)]
-	
-	byteWidth = width/2+1+1	 # TODO: Calculate a power of two for this
-	spriteChunks = [["" for y in range(height)] for x in range(byteWidth)]
+def layoutSpriteChunk(pixelData,width,height,shift):
 
-	# Layout rows
+	colorStreams = byteStreamsFromPixels(pixelData,width,height,shift,bitsForColor,highBitForColor)
+	maskStreams = byteStreamsFromPixels(pixelData,width,height,shift,bitsForMask,highBitForMask)
+	code = generateBlitter(colorStreams,maskStreams,height)
+
+	return code
+
+
+def byteStreamsFromPixels(pixelData,width,height,shift,bitDelegate,highBitDelegate):
+
+	byteStreams = ["" for x in range(height)]
+	byteWidth = width/2+1+1
+
 	for row in range(height):
-		pixelRow = bitmap[row]
 		bitStream = ""
 		
 		# Compute raw bitstream for row from PNG pixels
 		for pixelIndex in range(width):
-			pixel = pixelColor(pixeldata,row,pixelIndex)
-			if pixel == Colors.black:
-				bitStream += "00"
-			else:
-				if pixel == Colors.white:
-					bitStream += "11"
-				else:
-					if pixel == Colors.green or pixel == Colors.orange:
-						bitStream += "01"
-					else:
-						bitStream += "10"
-	
+			pixel = pixelColor(pixelData,row,pixelIndex)
+			bitStream += bitDelegate(pixel)
+		
 		# Shift bit stream as needed
 		bitStream = shiftStringRight(bitStream,shift)
 		bitStream = bitStream[:byteWidth*8]
@@ -107,17 +101,28 @@ def layoutSpriteChunk(pixeldata,width,height,shift):
 					bitChunk += fillOutByte(7-remainingBits)
 				else:	
 					bitChunk = bitStream[bitPos:bitPos+7]				
-		
+			
 			bitChunk = bitChunk[::-1]
 			
-			# Set palette bit as needed. Note that we prefer high-bit white
-			# because blue fringe is less noticeable than magenta
-			highBit = "0"
-			if pixel == Colors.orange or pixel == Colors.blue or pixel == Colors.white:
-				highBit = "1"
-				
+			# Determine palette bit from first pixel on each row
+			highBit = highBitDelegate(pixelData[row][0])
+			
 			byteSplits[byteIndex] = highBit + bitChunk
 			bitPos += 7
+			
+			byteStreams[row] = byteSplits;
+
+	return byteStreams
+
+
+def generateBlitter(colorStreams,maskStreams,height):
+	
+	byteWidth = len(colorStreams[0])
+	spriteChunks = [["" for y in range(height)] for x in range(byteWidth)]
+	
+	for row in range(height):
+		
+		byteSplits = colorStreams[row]
 		
 		# Generate blitting code
 		for chunkIndex in range(len(byteSplits)):
@@ -152,7 +157,8 @@ def rowStartCalculatorCode():
 	"\tldy PARAM0\n" + \
 	"\tlda DIV7_2,y\n" + \
 	"\ttay\n";		
-			
+
+
 def fillOutByte(numBits):
 	filler = ""
 	for bit in range(numBits):
@@ -174,11 +180,49 @@ def shiftStringRight(string,shift):
 	result += string
 	return result
 				
-				
-def pixelColor(pixeldata,row,col):
-	r = pixeldata[row][col*3]
-	g = pixeldata[row][col*3+1]
-	b = pixeldata[row][col*3+2]
+
+def bitsForColor(pixel):
+
+	if pixel == Colors.black:
+		return "00"
+	else:
+		if pixel == Colors.white:
+			return "11"
+		else:
+			if pixel == Colors.green or pixel == Colors.orange:
+				return "01"
+
+	# blue or magenta
+	return "10"
+
+
+def bitsForMask(pixel):
+
+	if pixel == Colors.black:
+		return "00"
+
+	return "11"
+
+
+def highBitForColor(pixel):
+
+	# Note that we prefer high-bit white because blue fringe is less noticeable than magenta.
+	highBit = "0"
+	if pixel == Colors.orange or pixel == Colors.blue or pixel == Colors.white:
+		highBit = "1"
+
+	return highBit
+
+
+def highBitForMask(pixel):
+
+	return "1"
+
+
+def pixelColor(pixelData,row,col):
+	r = pixelData[row][col*3]
+	g = pixelData[row][col*3+1]
+	b = pixelData[row][col*3+2]
 	color = Colors.black
 	
 	if r==255 and g==0 and b==255:
@@ -195,10 +239,13 @@ def pixelColor(pixeldata,row,col):
 				else:
 					if r==255 and g==255 and b==255:
 						color = Colors.white
+					else:
+						if r==g and r==b and r!=0 and r!=255:	# Any gray is chroma key
+							color = Colors.key
 	return color
 	
 
-def printHorzontalLookup():
+def printHorizontalLookup():
 	disclaimer()
 	
 	print "DIV7_2:"

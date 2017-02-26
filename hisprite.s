@@ -27,6 +27,8 @@ PARAM2			= $08
 PARAM3			= $09
 SCRATCH0		= $19
 SCRATCH1		= $1a
+HIRES_PAGE_L	= $1b
+HIRES_PAGE_H	= $1c
 
 ; Macros
 .macro BLITBYTE xPos,yPos,addr
@@ -64,15 +66,19 @@ SCRATCH1		= $1a
 main:
 	jsr EnableHires
 
-;	lda #$00
-;	jsr VenetianFill
+	lda #$00
+	jsr VenetianFill
 
-	lda #<bgFilename
-	sta PARAM0
-	lda #>bgFilename
-	sta PARAM1
-	jsr BloadHires
+;	lda #<bgFilename
+;	sta PARAM0
+;	lda #>bgFilename
+;	sta PARAM1
+;	jsr BloadHires
 
+	lda #<HGRROWS_H1
+	sta HIRES_PAGE_L
+	lda #>HGRROWS_H1
+	sta HIRES_PAGE_H
 
 	ldx #0
 ;;;;
@@ -104,14 +110,24 @@ loop:
 	jsr SaveBackground
 
 	jsr BOXW_MAG
-	lda #$80
+	lda #$60
 	jsr ROMWAIT
+
+	; Sync to VBL
+@1: lda $C019
+	beq @1
+	bpl @1
+@0:	lda $C019
+	bmi @0
 
 	jsr RestoreBackground
 
 	inx
 	cpx #133
 	bne loop
+;	ldx #0
+;   jmp loop
+
 	rts
 
 bgBuffer:
@@ -171,10 +187,10 @@ bgFilename:
 .include "hgrtableX.s"
 .include "hgrtableY.s"
 .include "spritegen0.s"
-.include "spritegen1.s"
-.include "spritegen2.s"
-.include "spritegen3.s"
-.include "spritegen4.s"
+;.include "spritegen1.s"
+;.include "spritegen2.s"
+;.include "spritegen3.s"
+;.include "spritegen4.s"
 
 ; Suppress some linker warnings - Must be the last thing in the file
 .SEGMENT "ZPSAVE"

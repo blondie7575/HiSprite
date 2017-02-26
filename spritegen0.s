@@ -19,10 +19,8 @@ BOXW_MAG_JMP:
 
 
 BOXW_MAG_SHIFT0:
-	ldy PARAM0
-
 	ldx PARAM1
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -49,7 +47,7 @@ BOXW_MAG_SHIFT0:
 	sta (SCRATCH0),y
 
 	inx
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -76,88 +74,7 @@ BOXW_MAG_SHIFT0:
 	sta (SCRATCH0),y
 
 	inx
-	lda HGRROWS_H,x
-	sta SCRATCH1
-	lda HGRROWS_L,x
-	sta SCRATCH0
-	ldy PARAM0
-	lda DIV7_2,y
-	tay
-
-	lda #%01010001
-	sta (SCRATCH0),y
-	iny
-	lda #%00001010
-	sta (SCRATCH0),y
-	iny
-	lda #%00000001
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-
-	inx
-	lda HGRROWS_H,x
-	sta SCRATCH1
-	lda HGRROWS_L,x
-	sta SCRATCH0
-	ldy PARAM0
-	lda DIV7_2,y
-	tay
-
-	lda #%00010001
-	sta (SCRATCH0),y
-	iny
-	lda #%00001000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000001
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-
-	inx
-	lda HGRROWS_H,x
-	sta SCRATCH1
-	lda HGRROWS_L,x
-	sta SCRATCH0
-	ldy PARAM0
-	lda DIV7_2,y
-	tay
-
-	lda #%00010001
-	sta (SCRATCH0),y
-	iny
-	lda #%00001000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000001
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-
-	inx
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -184,7 +101,88 @@ BOXW_MAG_SHIFT0:
 	sta (SCRATCH0),y
 
 	inx
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
+	sta SCRATCH1
+	lda HGRROWS_L,x
+	sta SCRATCH0
+	ldy PARAM0
+	lda DIV7_2,y
+	tay
+
+	lda #%00010001
+	sta (SCRATCH0),y
+	iny
+	lda #%00001000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000001
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+
+	inx
+	lda HGRROWS_H1,x
+	sta SCRATCH1
+	lda HGRROWS_L,x
+	sta SCRATCH0
+	ldy PARAM0
+	lda DIV7_2,y
+	tay
+
+	lda #%00010001
+	sta (SCRATCH0),y
+	iny
+	lda #%00001000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000001
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+
+	inx
+	lda HGRROWS_H1,x
+	sta SCRATCH1
+	lda HGRROWS_L,x
+	sta SCRATCH0
+	ldy PARAM0
+	lda DIV7_2,y
+	tay
+
+	lda #%01010001
+	sta (SCRATCH0),y
+	iny
+	lda #%00001010
+	sta (SCRATCH0),y
+	iny
+	lda #%00000001
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+
+	inx
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -211,7 +209,7 @@ BOXW_MAG_SHIFT0:
 	sta (SCRATCH0),y
 
 	inx
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -243,10 +241,8 @@ BOXW_MAG_SHIFT0:
 
 
 BOXW_MAG_SHIFT1:
-	ldy PARAM0
-
 	ldx PARAM1
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -273,7 +269,7 @@ BOXW_MAG_SHIFT1:
 	sta (SCRATCH0),y
 
 	inx
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -300,88 +296,7 @@ BOXW_MAG_SHIFT1:
 	sta (SCRATCH0),y
 
 	inx
-	lda HGRROWS_H,x
-	sta SCRATCH1
-	lda HGRROWS_L,x
-	sta SCRATCH0
-	ldy PARAM0
-	lda DIV7_2,y
-	tay
-
-	lda #%01000100
-	sta (SCRATCH0),y
-	iny
-	lda #%00101010
-	sta (SCRATCH0),y
-	iny
-	lda #%00000100
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-
-	inx
-	lda HGRROWS_H,x
-	sta SCRATCH1
-	lda HGRROWS_L,x
-	sta SCRATCH0
-	ldy PARAM0
-	lda DIV7_2,y
-	tay
-
-	lda #%01000100
-	sta (SCRATCH0),y
-	iny
-	lda #%00100000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000100
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-
-	inx
-	lda HGRROWS_H,x
-	sta SCRATCH1
-	lda HGRROWS_L,x
-	sta SCRATCH0
-	ldy PARAM0
-	lda DIV7_2,y
-	tay
-
-	lda #%01000100
-	sta (SCRATCH0),y
-	iny
-	lda #%00100000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000100
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-
-	inx
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -408,7 +323,88 @@ BOXW_MAG_SHIFT1:
 	sta (SCRATCH0),y
 
 	inx
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
+	sta SCRATCH1
+	lda HGRROWS_L,x
+	sta SCRATCH0
+	ldy PARAM0
+	lda DIV7_2,y
+	tay
+
+	lda #%01000100
+	sta (SCRATCH0),y
+	iny
+	lda #%00100000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000100
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+
+	inx
+	lda HGRROWS_H1,x
+	sta SCRATCH1
+	lda HGRROWS_L,x
+	sta SCRATCH0
+	ldy PARAM0
+	lda DIV7_2,y
+	tay
+
+	lda #%01000100
+	sta (SCRATCH0),y
+	iny
+	lda #%00100000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000100
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+
+	inx
+	lda HGRROWS_H1,x
+	sta SCRATCH1
+	lda HGRROWS_L,x
+	sta SCRATCH0
+	ldy PARAM0
+	lda DIV7_2,y
+	tay
+
+	lda #%01000100
+	sta (SCRATCH0),y
+	iny
+	lda #%00101010
+	sta (SCRATCH0),y
+	iny
+	lda #%00000100
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+
+	inx
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -435,7 +431,7 @@ BOXW_MAG_SHIFT1:
 	sta (SCRATCH0),y
 
 	inx
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -467,10 +463,8 @@ BOXW_MAG_SHIFT1:
 
 
 BOXW_MAG_SHIFT2:
-	ldy PARAM0
-
 	ldx PARAM1
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -497,7 +491,7 @@ BOXW_MAG_SHIFT2:
 	sta (SCRATCH0),y
 
 	inx
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -524,88 +518,7 @@ BOXW_MAG_SHIFT2:
 	sta (SCRATCH0),y
 
 	inx
-	lda HGRROWS_H,x
-	sta SCRATCH1
-	lda HGRROWS_L,x
-	sta SCRATCH0
-	ldy PARAM0
-	lda DIV7_2,y
-	tay
-
-	lda #%00010000
-	sta (SCRATCH0),y
-	iny
-	lda #%00101010
-	sta (SCRATCH0),y
-	iny
-	lda #%00010001
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-
-	inx
-	lda HGRROWS_H,x
-	sta SCRATCH1
-	lda HGRROWS_L,x
-	sta SCRATCH0
-	ldy PARAM0
-	lda DIV7_2,y
-	tay
-
-	lda #%00010000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000010
-	sta (SCRATCH0),y
-	iny
-	lda #%00010001
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-
-	inx
-	lda HGRROWS_H,x
-	sta SCRATCH1
-	lda HGRROWS_L,x
-	sta SCRATCH0
-	ldy PARAM0
-	lda DIV7_2,y
-	tay
-
-	lda #%00010000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000010
-	sta (SCRATCH0),y
-	iny
-	lda #%00010001
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-
-	inx
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -632,7 +545,88 @@ BOXW_MAG_SHIFT2:
 	sta (SCRATCH0),y
 
 	inx
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
+	sta SCRATCH1
+	lda HGRROWS_L,x
+	sta SCRATCH0
+	ldy PARAM0
+	lda DIV7_2,y
+	tay
+
+	lda #%00010000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000010
+	sta (SCRATCH0),y
+	iny
+	lda #%00010001
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+
+	inx
+	lda HGRROWS_H1,x
+	sta SCRATCH1
+	lda HGRROWS_L,x
+	sta SCRATCH0
+	ldy PARAM0
+	lda DIV7_2,y
+	tay
+
+	lda #%00010000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000010
+	sta (SCRATCH0),y
+	iny
+	lda #%00010001
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+
+	inx
+	lda HGRROWS_H1,x
+	sta SCRATCH1
+	lda HGRROWS_L,x
+	sta SCRATCH0
+	ldy PARAM0
+	lda DIV7_2,y
+	tay
+
+	lda #%00010000
+	sta (SCRATCH0),y
+	iny
+	lda #%00101010
+	sta (SCRATCH0),y
+	iny
+	lda #%00010001
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+
+	inx
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -659,7 +653,7 @@ BOXW_MAG_SHIFT2:
 	sta (SCRATCH0),y
 
 	inx
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -691,10 +685,8 @@ BOXW_MAG_SHIFT2:
 
 
 BOXW_MAG_SHIFT3:
-	ldy PARAM0
-
 	ldx PARAM1
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -721,7 +713,7 @@ BOXW_MAG_SHIFT3:
 	sta (SCRATCH0),y
 
 	inx
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -748,88 +740,7 @@ BOXW_MAG_SHIFT3:
 	sta (SCRATCH0),y
 
 	inx
-	lda HGRROWS_H,x
-	sta SCRATCH1
-	lda HGRROWS_L,x
-	sta SCRATCH0
-	ldy PARAM0
-	lda DIV7_2,y
-	tay
-
-	lda #%01000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00101000
-	sta (SCRATCH0),y
-	iny
-	lda #%01000101
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-
-	inx
-	lda HGRROWS_H,x
-	sta SCRATCH1
-	lda HGRROWS_L,x
-	sta SCRATCH0
-	ldy PARAM0
-	lda DIV7_2,y
-	tay
-
-	lda #%01000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00001000
-	sta (SCRATCH0),y
-	iny
-	lda #%01000100
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-
-	inx
-	lda HGRROWS_H,x
-	sta SCRATCH1
-	lda HGRROWS_L,x
-	sta SCRATCH0
-	ldy PARAM0
-	lda DIV7_2,y
-	tay
-
-	lda #%01000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00001000
-	sta (SCRATCH0),y
-	iny
-	lda #%01000100
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-
-	inx
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -856,7 +767,88 @@ BOXW_MAG_SHIFT3:
 	sta (SCRATCH0),y
 
 	inx
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
+	sta SCRATCH1
+	lda HGRROWS_L,x
+	sta SCRATCH0
+	ldy PARAM0
+	lda DIV7_2,y
+	tay
+
+	lda #%01000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00001000
+	sta (SCRATCH0),y
+	iny
+	lda #%01000100
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+
+	inx
+	lda HGRROWS_H1,x
+	sta SCRATCH1
+	lda HGRROWS_L,x
+	sta SCRATCH0
+	ldy PARAM0
+	lda DIV7_2,y
+	tay
+
+	lda #%01000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00001000
+	sta (SCRATCH0),y
+	iny
+	lda #%01000100
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+
+	inx
+	lda HGRROWS_H1,x
+	sta SCRATCH1
+	lda HGRROWS_L,x
+	sta SCRATCH0
+	ldy PARAM0
+	lda DIV7_2,y
+	tay
+
+	lda #%01000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00101000
+	sta (SCRATCH0),y
+	iny
+	lda #%01000101
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+
+	inx
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -883,7 +875,7 @@ BOXW_MAG_SHIFT3:
 	sta (SCRATCH0),y
 
 	inx
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -915,10 +907,8 @@ BOXW_MAG_SHIFT3:
 
 
 BOXW_MAG_SHIFT4:
-	ldy PARAM0
-
 	ldx PARAM1
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -945,7 +935,7 @@ BOXW_MAG_SHIFT4:
 	sta (SCRATCH0),y
 
 	inx
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -972,88 +962,7 @@ BOXW_MAG_SHIFT4:
 	sta (SCRATCH0),y
 
 	inx
-	lda HGRROWS_H,x
-	sta SCRATCH1
-	lda HGRROWS_L,x
-	sta SCRATCH0
-	ldy PARAM0
-	lda DIV7_2,y
-	tay
-
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00100010
-	sta (SCRATCH0),y
-	iny
-	lda #%00010101
-	sta (SCRATCH0),y
-	iny
-	lda #%00000010
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-
-	inx
-	lda HGRROWS_H,x
-	sta SCRATCH1
-	lda HGRROWS_L,x
-	sta SCRATCH0
-	ldy PARAM0
-	lda DIV7_2,y
-	tay
-
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00100010
-	sta (SCRATCH0),y
-	iny
-	lda #%00010000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000010
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-
-	inx
-	lda HGRROWS_H,x
-	sta SCRATCH1
-	lda HGRROWS_L,x
-	sta SCRATCH0
-	ldy PARAM0
-	lda DIV7_2,y
-	tay
-
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00100010
-	sta (SCRATCH0),y
-	iny
-	lda #%00010000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000010
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-
-	inx
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -1080,7 +989,88 @@ BOXW_MAG_SHIFT4:
 	sta (SCRATCH0),y
 
 	inx
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
+	sta SCRATCH1
+	lda HGRROWS_L,x
+	sta SCRATCH0
+	ldy PARAM0
+	lda DIV7_2,y
+	tay
+
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00100010
+	sta (SCRATCH0),y
+	iny
+	lda #%00010000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000010
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+
+	inx
+	lda HGRROWS_H1,x
+	sta SCRATCH1
+	lda HGRROWS_L,x
+	sta SCRATCH0
+	ldy PARAM0
+	lda DIV7_2,y
+	tay
+
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00100010
+	sta (SCRATCH0),y
+	iny
+	lda #%00010000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000010
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+
+	inx
+	lda HGRROWS_H1,x
+	sta SCRATCH1
+	lda HGRROWS_L,x
+	sta SCRATCH0
+	ldy PARAM0
+	lda DIV7_2,y
+	tay
+
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00100010
+	sta (SCRATCH0),y
+	iny
+	lda #%00010101
+	sta (SCRATCH0),y
+	iny
+	lda #%00000010
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+
+	inx
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -1107,7 +1097,7 @@ BOXW_MAG_SHIFT4:
 	sta (SCRATCH0),y
 
 	inx
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -1139,10 +1129,8 @@ BOXW_MAG_SHIFT4:
 
 
 BOXW_MAG_SHIFT5:
-	ldy PARAM0
-
 	ldx PARAM1
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -1169,7 +1157,7 @@ BOXW_MAG_SHIFT5:
 	sta (SCRATCH0),y
 
 	inx
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -1196,88 +1184,7 @@ BOXW_MAG_SHIFT5:
 	sta (SCRATCH0),y
 
 	inx
-	lda HGRROWS_H,x
-	sta SCRATCH1
-	lda HGRROWS_L,x
-	sta SCRATCH0
-	ldy PARAM0
-	lda DIV7_2,y
-	tay
-
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00001000
-	sta (SCRATCH0),y
-	iny
-	lda #%01010101
-	sta (SCRATCH0),y
-	iny
-	lda #%00001000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-
-	inx
-	lda HGRROWS_H,x
-	sta SCRATCH1
-	lda HGRROWS_L,x
-	sta SCRATCH0
-	ldy PARAM0
-	lda DIV7_2,y
-	tay
-
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00001000
-	sta (SCRATCH0),y
-	iny
-	lda #%01000001
-	sta (SCRATCH0),y
-	iny
-	lda #%00001000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-
-	inx
-	lda HGRROWS_H,x
-	sta SCRATCH1
-	lda HGRROWS_L,x
-	sta SCRATCH0
-	ldy PARAM0
-	lda DIV7_2,y
-	tay
-
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00001000
-	sta (SCRATCH0),y
-	iny
-	lda #%01000001
-	sta (SCRATCH0),y
-	iny
-	lda #%00001000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-
-	inx
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -1304,7 +1211,88 @@ BOXW_MAG_SHIFT5:
 	sta (SCRATCH0),y
 
 	inx
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
+	sta SCRATCH1
+	lda HGRROWS_L,x
+	sta SCRATCH0
+	ldy PARAM0
+	lda DIV7_2,y
+	tay
+
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00001000
+	sta (SCRATCH0),y
+	iny
+	lda #%01000001
+	sta (SCRATCH0),y
+	iny
+	lda #%00001000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+
+	inx
+	lda HGRROWS_H1,x
+	sta SCRATCH1
+	lda HGRROWS_L,x
+	sta SCRATCH0
+	ldy PARAM0
+	lda DIV7_2,y
+	tay
+
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00001000
+	sta (SCRATCH0),y
+	iny
+	lda #%01000001
+	sta (SCRATCH0),y
+	iny
+	lda #%00001000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+
+	inx
+	lda HGRROWS_H1,x
+	sta SCRATCH1
+	lda HGRROWS_L,x
+	sta SCRATCH0
+	ldy PARAM0
+	lda DIV7_2,y
+	tay
+
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00001000
+	sta (SCRATCH0),y
+	iny
+	lda #%01010101
+	sta (SCRATCH0),y
+	iny
+	lda #%00001000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+
+	inx
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -1331,7 +1319,7 @@ BOXW_MAG_SHIFT5:
 	sta (SCRATCH0),y
 
 	inx
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -1363,10 +1351,8 @@ BOXW_MAG_SHIFT5:
 
 
 BOXW_MAG_SHIFT6:
-	ldy PARAM0
-
 	ldx PARAM1
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -1393,7 +1379,7 @@ BOXW_MAG_SHIFT6:
 	sta (SCRATCH0),y
 
 	inx
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -1420,88 +1406,7 @@ BOXW_MAG_SHIFT6:
 	sta (SCRATCH0),y
 
 	inx
-	lda HGRROWS_H,x
-	sta SCRATCH1
-	lda HGRROWS_L,x
-	sta SCRATCH0
-	ldy PARAM0
-	lda DIV7_2,y
-	tay
-
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00100000
-	sta (SCRATCH0),y
-	iny
-	lda #%01010100
-	sta (SCRATCH0),y
-	iny
-	lda #%00100010
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-
-	inx
-	lda HGRROWS_H,x
-	sta SCRATCH1
-	lda HGRROWS_L,x
-	sta SCRATCH0
-	ldy PARAM0
-	lda DIV7_2,y
-	tay
-
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00100000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000100
-	sta (SCRATCH0),y
-	iny
-	lda #%00100010
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-
-	inx
-	lda HGRROWS_H,x
-	sta SCRATCH1
-	lda HGRROWS_L,x
-	sta SCRATCH0
-	ldy PARAM0
-	lda DIV7_2,y
-	tay
-
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00100000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000100
-	sta (SCRATCH0),y
-	iny
-	lda #%00100010
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-	iny
-	lda #%00000000
-	sta (SCRATCH0),y
-
-	inx
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -1528,7 +1433,88 @@ BOXW_MAG_SHIFT6:
 	sta (SCRATCH0),y
 
 	inx
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
+	sta SCRATCH1
+	lda HGRROWS_L,x
+	sta SCRATCH0
+	ldy PARAM0
+	lda DIV7_2,y
+	tay
+
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00100000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000100
+	sta (SCRATCH0),y
+	iny
+	lda #%00100010
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+
+	inx
+	lda HGRROWS_H1,x
+	sta SCRATCH1
+	lda HGRROWS_L,x
+	sta SCRATCH0
+	ldy PARAM0
+	lda DIV7_2,y
+	tay
+
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00100000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000100
+	sta (SCRATCH0),y
+	iny
+	lda #%00100010
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+
+	inx
+	lda HGRROWS_H1,x
+	sta SCRATCH1
+	lda HGRROWS_L,x
+	sta SCRATCH0
+	ldy PARAM0
+	lda DIV7_2,y
+	tay
+
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00100000
+	sta (SCRATCH0),y
+	iny
+	lda #%01010100
+	sta (SCRATCH0),y
+	iny
+	lda #%00100010
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+	iny
+	lda #%00000000
+	sta (SCRATCH0),y
+
+	inx
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0
@@ -1555,7 +1541,7 @@ BOXW_MAG_SHIFT6:
 	sta (SCRATCH0),y
 
 	inx
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
 	sta SCRATCH1
 	lda HGRROWS_L,x
 	sta SCRATCH0

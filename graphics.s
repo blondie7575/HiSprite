@@ -38,7 +38,7 @@ saveBackground_loop:
 	adc	PARAM1	; Calculate Y line
 	tax
 
-	lda HGRROWS_H,x			; Compute hires row
+	lda HGRROWS_H1,x			; Compute hires row
 	sta saveBackground_smc0+2
 	sta saveBackground_smc1+2
 	sta saveBackground_smc2+2
@@ -121,7 +121,7 @@ restoreBackground_loop:
 	adc	PARAM1	; Calculate Y line
 	tax
 
-	lda HGRROWS_H,x			; Compute hires row
+	lda HGRROWS_H1,x			; Compute hires row
 	sta restoreBackground_smc0+2
 	sta restoreBackground_smc1+2
 	sta restoreBackground_smc2+2
@@ -197,7 +197,7 @@ LinearFill:
 
 linearFill_outer:
 	pha
-	lda HGRROWS_H,x
+	lda HGRROWS_H1,x
 	sta linearFill_inner+2
 	lda HGRROWS_L,x
 	sta linearFill_inner+1

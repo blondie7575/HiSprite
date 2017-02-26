@@ -10,10 +10,17 @@ class Colors:
 def main(argv):
 	
 	if len(argv)<1:
+		usage()
+		exit(0)
+
+	if sys.argv[1] == "--tables":
 		printHorizontalLookup()
 		exit(0)
 
 	pngfile = sys.argv[1]
+	xdraw = 0
+	if len(argv)>1 and sys.argv[2] == "--xdraw":
+		xdraw = 1
 
 	reader = png.Reader(pngfile)
 	try:
@@ -45,11 +52,10 @@ def main(argv):
 	print "\n"
 	for shift in range(0,7):
 		print "%s_SHIFT%d:" % (niceName,shift)
-		print "\tldy PARAM0\n"
 		print "\tldx PARAM1"
 		print rowStartCalculatorCode();
 
-		spriteChunks = layoutSpriteChunk(pixelData,width,height,shift)
+		spriteChunks = layoutSpriteChunk(pixelData,width,height,shift,xdraw)
 		
 		for row in range(height):
 			for chunkIndex in range(len(spriteChunks)):
@@ -58,11 +64,11 @@ def main(argv):
 		print "\n"				
 
 
-def layoutSpriteChunk(pixelData,width,height,shift):
+def layoutSpriteChunk(pixelData,width,height,shift,xdraw):
 
 	colorStreams = byteStreamsFromPixels(pixelData,width,height,shift,bitsForColor,highBitForColor)
 	maskStreams = byteStreamsFromPixels(pixelData,width,height,shift,bitsForMask,highBitForMask)
-	code = generateBlitter(colorStreams,maskStreams,height)
+	code = generateBlitter(colorStreams,maskStreams,height,xdraw)
 
 	return code
 
@@ -115,7 +121,7 @@ def byteStreamsFromPixels(pixelData,width,height,shift,bitDelegate,highBitDelega
 	return byteStreams
 
 
-def generateBlitter(colorStreams,maskStreams,height):
+def generateBlitter(colorStreams,maskStreams,height,xdraw):
 	
 	byteWidth = len(colorStreams[0])
 	spriteChunks = [["" for y in range(height)] for x in range(byteWidth)]
@@ -128,10 +134,16 @@ def generateBlitter(colorStreams,maskStreams,height):
 		for chunkIndex in range(len(byteSplits)):
 			
 			# Store byte into video memory
-			spriteChunks[chunkIndex][row] = \
-			"\tlda #%%%s\n" % byteSplits[chunkIndex] + \
-			"\tsta (SCRATCH0),y\n";
-			
+			if xdraw:
+				spriteChunks[chunkIndex][row] = \
+				"\tlda (SCRATCH0),y\n" + \
+				"\teor #%%%s\n" % byteSplits[chunkIndex] + \
+				"\tsta (SCRATCH0),y\n";
+			else:
+				spriteChunks[chunkIndex][row] = \
+				"\tlda #%%%s\n" % byteSplits[chunkIndex] + \
+				"\tsta (SCRATCH0),y\n";
+
 			# Increment indices
 			if chunkIndex == len(byteSplits)-1:
 				spriteChunks[chunkIndex][row] += "\n"
@@ -150,7 +162,7 @@ def generateBlitter(colorStreams,maskStreams,height):
 
 def rowStartCalculatorCode():
 	return \
-	"\tlda HGRROWS_H,x\n" + \
+	"\tlda HGRROWS_H1,x\n" + \
 	"\tsta SCRATCH1\n" + \
 	"\tlda HGRROWS_L,x\n" + \
 	"\tsta SCRATCH0\n" + \
@@ -259,8 +271,14 @@ def printHorizontalLookup():
 		
 def usage():
 	print '''
-Usage: HiSprite <png file>
-
+Usages: 
+	HiSprite <png file> [--xdraw]
+		Generates 6502 assembly to render all shifts of the given sprite,
+		optionally with exclusive-or drawing (if background will be non-black)
+		
+	HiSprite --tables
+		Generates lookup tables for horizontal sprite shifts (division and modulus 7)
+		
 PNG file must not have an alpha channel!
 '''
 	sys.exit(2)

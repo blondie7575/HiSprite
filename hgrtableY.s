@@ -5,7 +5,7 @@
 ;  Copyright (c) 2015 One Girl, One Laptop Productions. All rights reserved.
 ;
 
-HGRROWS_H:
+HGRROWS_H1:
 	.byte	$20
 	.byte	$24
 	.byte	$28
@@ -442,3 +442,220 @@ HGRROWS_L:
 	.byte	$D0
 
 
+
+HGRROWS_H2:
+	.byte	$40
+	.byte	$44
+	.byte	$48
+	.byte	$4C
+	.byte	$50
+	.byte	$54
+	.byte	$58
+	.byte	$5C
+
+	.byte	$40
+	.byte	$44
+	.byte	$48
+	.byte	$4C
+	.byte	$50
+	.byte	$54
+	.byte	$58
+	.byte	$5C
+
+	.byte	$41
+	.byte	$45
+	.byte	$49
+	.byte	$4D
+	.byte	$51
+	.byte	$55
+	.byte	$59
+	.byte	$5D
+
+	.byte	$41
+	.byte	$45
+	.byte	$49
+	.byte	$4D
+	.byte	$51
+	.byte	$55
+	.byte	$59
+	.byte	$5D
+
+	.byte	$42
+	.byte	$46
+	.byte	$4A
+	.byte	$4E
+	.byte	$52
+	.byte	$56
+	.byte	$5A
+	.byte	$5E
+
+	.byte	$42
+	.byte	$46
+	.byte	$4A
+	.byte	$4E
+	.byte	$52
+	.byte	$56
+	.byte	$5A
+	.byte	$5E
+
+	.byte	$43
+	.byte	$47
+	.byte	$4B
+	.byte	$4F
+	.byte	$53
+	.byte	$57
+	.byte	$5B
+	.byte	$5F
+
+	.byte	$43
+	.byte	$47
+	.byte	$4B
+	.byte	$4F
+	.byte	$53
+	.byte	$57
+	.byte	$5B
+	.byte	$5F
+;
+	.byte	$40
+	.byte	$44
+	.byte	$48
+	.byte	$4C
+	.byte	$50
+	.byte	$54
+	.byte	$58
+	.byte	$5C
+
+	.byte	$40
+	.byte	$44
+	.byte	$48
+	.byte	$4C
+	.byte	$50
+	.byte	$54
+	.byte	$58
+	.byte	$5C
+
+	.byte	$41
+	.byte	$45
+	.byte	$49
+	.byte	$4D
+	.byte	$51
+	.byte	$55
+	.byte	$59
+	.byte	$5D
+
+	.byte	$41
+	.byte	$45
+	.byte	$49
+	.byte	$4D
+	.byte	$51
+	.byte	$55
+	.byte	$59
+	.byte	$5D
+
+	.byte	$42
+	.byte	$46
+	.byte	$4A
+	.byte	$4E
+	.byte	$52
+	.byte	$56
+	.byte	$5A
+	.byte	$5E
+
+	.byte	$42
+	.byte	$46
+	.byte	$4A
+	.byte	$4E
+	.byte	$52
+	.byte	$56
+	.byte	$5A
+	.byte	$5E
+
+	.byte	$43
+	.byte	$47
+	.byte	$4B
+	.byte	$4F
+	.byte	$53
+	.byte	$57
+	.byte	$5B
+	.byte	$5F
+
+	.byte	$43
+	.byte	$47
+	.byte	$4B
+	.byte	$4F
+	.byte	$53
+	.byte	$57
+	.byte	$5B
+	.byte	$5F
+;;
+	.byte	$40
+	.byte	$44
+	.byte	$48
+	.byte	$4C
+	.byte	$50
+	.byte	$54
+	.byte	$58
+	.byte	$5C
+
+	.byte	$40
+	.byte	$44
+	.byte	$48
+	.byte	$4C
+	.byte	$50
+	.byte	$54
+	.byte	$58
+	.byte	$5C
+
+	.byte	$41
+	.byte	$45
+	.byte	$49
+	.byte	$4D
+	.byte	$51
+	.byte	$55
+	.byte	$59
+	.byte	$5D
+
+	.byte	$41
+	.byte	$45
+	.byte	$49
+	.byte	$4D
+	.byte	$51
+	.byte	$55
+	.byte	$59
+	.byte	$5D
+
+	.byte	$42
+	.byte	$46
+	.byte	$4A
+	.byte	$4E
+	.byte	$52
+	.byte	$56
+	.byte	$5A
+	.byte	$5E
+
+	.byte	$42
+	.byte	$46
+	.byte	$4A
+	.byte	$4E
+	.byte	$52
+	.byte	$56
+	.byte	$5A
+	.byte	$5E
+
+	.byte	$43
+	.byte	$47
+	.byte	$4B
+	.byte	$4F
+	.byte	$53
+	.byte	$57
+	.byte	$5B
+	.byte	$5F
+
+	.byte	$43
+	.byte	$47
+	.byte	$4B
+	.byte	$4F
+	.byte	$53
+	.byte	$57
+	.byte	$5B
+	.byte	$5F

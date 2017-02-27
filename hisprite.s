@@ -14,7 +14,9 @@
 TEXT = $c050
 HIRES1 = $c057
 HIRES2 = $c058
-
+HIRESPAGE1 = $c054
+HIRESPAGE2 = $c055
+RDPAGE2 = $c01c
 
 ; ROM entry points
 COUT = $fded
@@ -75,10 +77,7 @@ main:
 ;	sta PARAM1
 ;	jsr BloadHires
 
-	lda #<HGRROWS_H1
-	sta HIRES_PAGE_L
-	lda #>HGRROWS_H1
-	sta HIRES_PAGE_H
+	jsr WritePage2
 
 	ldx #0
 ;;;;
@@ -103,10 +102,23 @@ loop:
 	lda #0
 	sta PARAM1
 
-	lda #<bgBuffer
+	lda RDPAGE2
+	bmi loop_SavePage1
+
+loop_SavePage2:
+	lda #<bgBuffer2
 	sta PARAM2
-	lda #>bgBuffer
+	lda #>bgBuffer2
 	sta PARAM3
+	bra loop_SavePage
+
+loop_SavePage1:
+	lda #<bgBuffer1
+	sta PARAM2
+	lda #>bgBuffer1
+	sta PARAM3
+
+loop_SavePage:
 	jsr SaveBackground
 
 	jsr BOXW_MAG
@@ -114,13 +126,34 @@ loop:
 	jsr ROMWAIT
 
 	; Sync to VBL
-@1: lda $C019
-	beq @1
-	bpl @1
-@0:	lda $C019
-	bmi @0
+;@1: lda $C019
+;	beq @1
+;	bpl @1
+;@0:	lda $C019
+;	bmi @0
 
+	jsr PageFlip
+
+	lda RDPAGE2
+	bmi loop_RestorePage1
+
+loop_RestorePage2:
+	lda #<bgBuffer2
+	sta PARAM2
+	lda #>bgBuffer2
+	sta PARAM3
+	bra loop_RestorePage
+
+loop_RestorePage1:
+	lda #<bgBuffer1
+	sta PARAM2
+	lda #>bgBuffer1
+	sta PARAM3
+
+loop_RestorePage:
+	dec PARAM0
 	jsr RestoreBackground
+	inc PARAM0
 
 	inx
 	cpx #133
@@ -130,7 +163,7 @@ loop:
 
 	rts
 
-bgBuffer:
+bgBuffer1:
 	.byte 0
 	.byte 0
 	.byte 0
@@ -179,6 +212,57 @@ bgBuffer:
 	.byte 0
 	.byte 0
 	.byte 0
+
+bgBuffer2:
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+
 
 bgFilename:
 	.byte "KOL",0

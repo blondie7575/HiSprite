@@ -162,10 +162,14 @@ def generateBlitter(colorStreams,maskStreams,height,xdraw):
 
 def rowStartCalculatorCode():
 	return \
-	"\tlda HGRROWS_H1,x\n" + \
+	"\tphy\n" + \
+	"\ttxa\n" + \
+	"\ttay\n" + \
+	"\tlda (HIRES_PAGE_L),y\n" + \
 	"\tsta SCRATCH1\n" + \
-	"\tlda HGRROWS_L,x\n" + \
+	"\tlda HGRROWS_L,y\n" + \
 	"\tsta SCRATCH0\n" + \
+	"\tply\n" + \
 	"\tldy PARAM0\n" + \
 	"\tlda DIV7_2,y\n" + \
 	"\ttay\n";		

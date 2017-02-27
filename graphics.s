@@ -17,42 +17,6 @@ EnableHires:
 	rts
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; WritePage1
-; Trashes A
-;
-WritePage1:
-	lda #<HGRROWS_H1
-	sta HIRES_PAGE_L
-	lda #>HGRROWS_H1
-	sta HIRES_PAGE_H
-	rts
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; WritePage2
-; Trashes A
-;
-WritePage2:
-	lda #<HGRROWS_H2
-	sta HIRES_PAGE_L
-	lda #>HGRROWS_H2
-	sta HIRES_PAGE_H
-	rts
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; PageFlip
-; Trashes A
-;
-PageFlip:
-	lda RDPAGE2
-	bmi PageFlip_Show1
-	lda HIRESPAGE2
-	jmp WritePage1
-
-PageFlip_Show1:
-	lda HIRESPAGE1
-	jmp WritePage2
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; SaveBackground
 ; PARAM0: X pos
 ; PARAM1: Y pos
@@ -73,24 +37,21 @@ saveBackground_loop:
 	pha
 	adc	PARAM1	; Calculate Y line
 	tax
-	phy
-	tay
 
-	lda (HIRES_PAGE_L),y			; Compute hires row
+	lda HGRROWS_H1,x			; Compute hires row
 	sta saveBackground_smc0+2
 	sta saveBackground_smc1+2
 	sta saveBackground_smc2+2
 	sta saveBackground_smc3+2
 	sta saveBackground_smc4+2
 	sta saveBackground_smc5+2
-	lda HGRROWS_L,y
+	lda HGRROWS_L,x
 	sta saveBackground_smc0+1
 	sta saveBackground_smc1+1
 	sta saveBackground_smc2+1
 	sta saveBackground_smc3+1
 	sta saveBackground_smc4+1
 	sta saveBackground_smc5+1
-	ply
 
 	ldx PARAM0				; Compute hires column
 	lda DIV7_2,x
@@ -159,24 +120,21 @@ restoreBackground_loop:
 	pha
 	adc	PARAM1	; Calculate Y line
 	tax
-	phy
-	tay
 
-	lda (HIRES_PAGE_L),y			; Compute hires row
+	lda HGRROWS_H1,x			; Compute hires row
 	sta restoreBackground_smc0+2
 	sta restoreBackground_smc1+2
 	sta restoreBackground_smc2+2
 	sta restoreBackground_smc3+2
 	sta restoreBackground_smc4+2
 	sta restoreBackground_smc5+2
-	lda HGRROWS_L,y
+	lda HGRROWS_L,x
 	sta restoreBackground_smc0+1
 	sta restoreBackground_smc1+1
 	sta restoreBackground_smc2+1
 	sta restoreBackground_smc3+1
 	sta restoreBackground_smc4+1
 	sta restoreBackground_smc5+1
-	ply
 
 	ldx PARAM0				; Compute hires column
 	lda DIV7_2,x

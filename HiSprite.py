@@ -133,16 +133,20 @@ def generateBlitter(colorStreams,maskStreams,height,xdraw):
 		# Generate blitting code
 		for chunkIndex in range(len(byteSplits)):
 			
-			# Store byte into video memory
-			if xdraw:
-				spriteChunks[chunkIndex][row] = \
-				"\tlda (SCRATCH0),y\n" + \
-				"\teor #%%%s\n" % byteSplits[chunkIndex] + \
-				"\tsta (SCRATCH0),y\n";
-			else:
-				spriteChunks[chunkIndex][row] = \
-				"\tlda #%%%s\n" % byteSplits[chunkIndex] + \
-				"\tsta (SCRATCH0),y\n";
+			# Optimization
+			if byteSplits[chunkIndex] != "00000000" and \
+				byteSplits[chunkIndex] != "10000000":
+			
+				# Store byte into video memory
+				if xdraw:
+					spriteChunks[chunkIndex][row] = \
+					"\tlda (SCRATCH0),y\n" + \
+					"\teor #%%%s\n" % byteSplits[chunkIndex] + \
+					"\tsta (SCRATCH0),y\n";
+				else:
+					spriteChunks[chunkIndex][row] = \
+					"\tlda #%%%s\n" % byteSplits[chunkIndex] + \
+					"\tsta (SCRATCH0),y\n";
 
 			# Increment indices
 			if chunkIndex == len(byteSplits)-1:

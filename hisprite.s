@@ -97,11 +97,12 @@ main:
 ;	rts
 ;;;;
 
+	lda #0
+	sta PARAM1
+
 loop:
 	txa
 	sta PARAM0
-	lda #0
-	sta PARAM1
 
 	lda #<bgBuffer
 	sta PARAM2
@@ -110,8 +111,8 @@ loop:
 	jsr SaveBackground
 
 	jsr BOXW_MAG
-	lda #$60
-	jsr ROMWAIT
+	jsr delayShort
+	jsr delayShort
 
 	; Sync to VBL
 @1: lda $C019
@@ -125,10 +126,40 @@ loop:
 	inx
 	cpx #133
 	bne loop
-;	ldx #0
-;   jmp loop
+
+	ldx #0
+    jmp loop
 
 	rts
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; delayShort
+; Sleeps for ~1/30th second
+;
+delayShort:
+	SAVE_AXY
+
+	ldy		#$06	; Loop a bit
+delayShortOuter:
+	ldx		#$ff
+delayShortInner:
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	dex
+	bne		delayShortInner
+	dey
+	bne		delayShortOuter
+
+	RESTORE_AXY
+	rts
+
+
 
 bgBuffer:
 	.byte 0

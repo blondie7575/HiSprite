@@ -27,8 +27,8 @@ PARAM2			= $08
 PARAM3			= $09
 SCRATCH0		= $19
 SCRATCH1		= $1a
-HIRES_PAGE_L	= $1b
-HIRES_PAGE_H	= $1c
+SPRITEPTR_L		= $1b
+SPRITEPTR_H		= $1c
 
 ; Macros
 .macro BLITBYTE xPos,yPos,addr
@@ -75,60 +75,121 @@ main:
 ;	sta PARAM1
 ;	jsr BloadHires
 
-	lda #<HGRROWS_H1
-	sta HIRES_PAGE_L
-	lda #>HGRROWS_H1
-	sta HIRES_PAGE_H
 
-	ldx #0
-;;;;
-;	stz PARAM0
-;	stz PARAM1
-;	jsr BOXW_MAG
-;
-;	lda #10
-;	sta PARAM1
-;	jsr BOXW_MIX
-;
-;	lda #20
-;	sta PARAM1
-;	jsr BOXW_ORG
-;
-;	rts
-;;;;
+; Draw sprites
+renderLoop:
 
-	lda #0
+	; Find our sprite pointer
+	lda spriteNum
+	asl
+	tax
+	lda META_BUFFERS+1,x
+	sta SPRITEPTR_H
+	lda META_BUFFERS,x
+	sta SPRITEPTR_L
+
+	; Find Y coordinate
+	ldy #1
+	lda (SPRITEPTR_L),y
 	sta PARAM1
 
-loop:
-	txa
+	; Find X coordinate
+	ldy #0
+	lda (SPRITEPTR_L),y
 	sta PARAM0
 
-	lda #<bgBuffer
+	; Calculate sprite background buffer location
+	lda BG_BUFFERS,x
 	sta PARAM2
-	lda #>bgBuffer
+	lda BG_BUFFERS+1,x
 	sta PARAM3
 	jsr SaveBackground
 
 	jsr BOXW_MAG
+
+	; Next sprite
+	dec spriteNum
+	bmi restartList
+	jmp renderLoop
+
+restartList:
+	lda #9
+	sta spriteNum
+
 	jsr delayShort
 	jsr delayShort
 
-	; Sync to VBL
-@1: lda $C019
-	beq @1
-	bpl @1
-@0:	lda $C019
-	bmi @0
+; Background restore
+backgroundLoop:
 
+	; Find our sprite pointer
+	lda spriteNum
+	asl
+	tax
+	lda META_BUFFERS+1,x
+	sta SPRITEPTR_H
+	lda META_BUFFERS,x
+	sta SPRITEPTR_L
+
+	; Find Y coordinate
+	ldy #1
+	lda (SPRITEPTR_L),y
+	sta PARAM1
+
+	; Find X coordinate
+	ldy #0
+	lda (SPRITEPTR_L),y
+	sta PARAM0
+
+	; Calculate sprite background buffer location
+	lda BG_BUFFERS,x
+	sta PARAM2
+	lda BG_BUFFERS+1,x
+	sta PARAM3
 	jsr RestoreBackground
 
-	inx
-	cpx #133
-	bne loop
+	; Next sprite
+	dec spriteNum
+	bmi backgroundRestartList
+	jmp backgroundLoop
 
-	ldx #0
-    jmp loop
+backgroundRestartList:
+	lda #9
+	sta spriteNum
+
+movementLoop:
+	; Find our sprite pointer
+	lda spriteNum
+	asl
+	tax
+	lda META_BUFFERS+1,x
+	sta SPRITEPTR_H
+	lda META_BUFFERS,x
+	sta SPRITEPTR_L
+
+	; Adjust X coordinate
+	ldy #0
+	lda (SPRITEPTR_L),y
+	inc
+	inc
+	cmp #132
+	beq resetX
+
+storeAndContinue:
+	sta (SPRITEPTR_L),y
+	dec spriteNum
+	bmi movementRestartList
+	jmp movementLoop
+
+resetX:
+	lda #0
+	bra storeAndContinue
+
+movementRestartList:
+	lda #9
+	sta spriteNum
+	jmp renderLoop
+
 
 	rts
 
@@ -161,62 +222,15 @@ delayShortInner:
 
 
 
-bgBuffer:
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
-
+spriteNum:
+	.byte 9
 bgFilename:
 	.byte "KOL",0
 
 .include "graphics.s"
 .include "hgrtableX.s"
 .include "hgrtableY.s"
+.include "spriteBuffers.s"
 .include "spritegen0.s"
 ;.include "spritegen1.s"
 ;.include "spritegen2.s"

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
+		7018A7A81E883A3A00C57515 /* spriteBuffers.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = spriteBuffers.s; sourceTree = "<group>"; };
 		701B5E0E1D84810000E6D330 /* macros.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = macros.s; sourceTree = "<group>"; };
 		701B5E0F1D84810000E6D330 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		701B5E101D84813500E6D330 /* hisprite.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = hisprite.s; sourceTree = "<group>"; };
@@ -29,6 +30,7 @@
 				701B5E111D84817500E6D330 /* HiSprite.py */,
 				701B5E0E1D84810000E6D330 /* macros.s */,
 				701B5E101D84813500E6D330 /* hisprite.s */,
+				7018A7A81E883A3A00C57515 /* spriteBuffers.s */,
 				701B5E181D849F3800E6D330 /* graphics.s */,
 				701B5E121D8481C800E6D330 /* hgrtableX.s */,
 				701B5E171D84824400E6D330 /* hgrtableY.s */,

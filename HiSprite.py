@@ -30,7 +30,7 @@ def main(argv):
 
 	width = pngdata[0]
 	height = pngdata[1]
-	pixelData = pngdata[2]	
+	pixelData = list(pngdata[2])
 	byteWidth = width/2+1+1	 # TODO: Calculate a power of two for this
 	niceName = os.path.splitext(pngfile)[0].upper()
 	

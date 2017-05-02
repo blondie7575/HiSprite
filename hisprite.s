@@ -66,8 +66,8 @@ SPRITEPTR_H		= $1c
 main:
 	jsr EnableHires
 
-	lda #$00
-	jsr VenetianFill
+	;lda #$00
+	;jsr VenetianFill
 
 ;	lda #<bgFilename
 ;	sta PARAM0
@@ -170,8 +170,13 @@ movementLoop:
 	; Adjust X coordinate
 	ldy #0
 	lda (SPRITEPTR_L),y
+.ifpC02
 	inc
 	inc
+.else
+	clc
+	adc #2
+.endif
 	cmp #132
 	beq resetX
 
@@ -183,7 +188,7 @@ storeAndContinue:
 
 resetX:
 	lda #0
-	bra storeAndContinue
+	beq storeAndContinue
 
 movementRestartList:
 	lda #9

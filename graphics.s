@@ -88,7 +88,12 @@ saveBackground_smc5:
 	iny
 
 	pla
+.ifpC02
 	inc
+.else
+	clc
+	adc #1
+.endif
 	pha
 
 	cpy #48
@@ -176,7 +181,12 @@ restoreBackground_smc5:
 	iny
 
 	pla
+.ifpC02
 	inc
+.else
+	clc
+	adc #1
+.endif
 	pha
 
 	cpy #48
@@ -240,6 +250,8 @@ KBD				= $c000
 KBDSTRB			= $c010
 
 
+; ProDOS v2 only works on 65C02, so skip this stuff for classic 6502 support
+.ifpC02
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; CommandLine
 ;
@@ -305,3 +317,4 @@ BloadHires_done:
 
 BloadHires_buffer:
 	.byte "BLOAD ",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+.endif

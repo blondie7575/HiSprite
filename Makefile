@@ -9,24 +9,30 @@
 #
 
 
-CL65=cl65
+CFGDIR=/usr/local/share/cc65
+CL65=/usr/local/bin/cl65 --cfg-path $(CFGDIR)/cfg --lib-path $(CFGDIR)/lib
 AC=AppleCommander.jar
 ADDR=6000
 
 PGM=hisprite
 
-all: $(PGM)
+all: hisprite hisprite-2plus
 
 
-$(PGM):
-	@PATH=$(PATH):/usr/local/bin; $(CL65) -t apple2enh --start-addr $(ADDR) -l$(PGM).lst $(PGM).s
+hisprite:
+	$(CL65) -t apple2enh --start-addr $(ADDR) -l$(PGM).lst -o $(PGM) $(PGM).s
 	java -jar $(AC) -d $(PGM).dsk $(PGM)
 	java -jar $(AC) -p $(PGM).dsk $(PGM) BIN 0x$(ADDR) < $(PGM)
-	rm -f $(PGM)
-	rm -f $(PGM).o
-	osascript V2Make.scpt $(PROJECT_DIR) $(PGM)
+	#rm -f $(PGM)
+	#rm -f $(PGM).o
+	#osascript V2Make.scpt $(PROJECT_DIR) $(PGM)
+
+hisprite-2plus:
+	$(CL65) -t apple2 --cpu 6502 --start-addr $(ADDR) -l$(PGM)-2plus.lst -o $(PGM)-2plus $(PGM).s
+	atrcopy -b KOLTitle.bin@2000 hisprite-2plus[4:]@6000 --brun 6000 -o GAME -f game.dsk
 
 clean:
 	rm -f $(PGM)
 	rm -f $(PGM).o
-
+	rm -f $(PGM)-2plus
+	rm -f $(PGM)-2plus.o

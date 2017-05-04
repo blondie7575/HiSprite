@@ -29,7 +29,8 @@ hisprite:
 
 hisprite-2plus:
 	$(CL65) -t apple2 --cpu 6502 --start-addr $(ADDR) -l$(PGM)-2plus.lst -o $(PGM)-2plus $(PGM).s
-	atrcopy -b KOLTitle.bin@2000 hisprite-2plus[4:]@6000 --brun 6000 -o GAME -f game.dsk
+	atrcopy game.dsk create -f dos33autobrun
+	atrcopy game.dsk asm -b KOLTitle.bin@2000 hisprite-2plus[4:]@6000 --brun 6000 -f -o AUTOBRUN
 
 clean:
 	rm -f $(PGM)

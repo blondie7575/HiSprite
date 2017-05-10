@@ -14,6 +14,7 @@ EnableHires:
 	lda TEXT
 	lda HIRES1
 	lda HIRES2
+	lda PAGE1
 	rts
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

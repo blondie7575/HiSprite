@@ -12,6 +12,8 @@
 
 ; Softswitches
 TEXT = $c050
+PAGE1 = $c054
+PAGE2 = $c055
 HIRES1 = $c057
 HIRES2 = $c058
 

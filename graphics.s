@@ -188,6 +188,79 @@ restoreBackground_smc5:
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; BlackRect
+; PARAM0: X pos
+; PARAM1: Y pos
+;
+; Assumes 4-byte-wide, 8px-high sprites
+;
+BlackRect:
+	SAVE_AX
+	lda #0
+	pha
+
+blackRect_loop:
+	clc
+	pla
+	pha
+	adc	PARAM1	; Calculate Y line
+	tax
+
+	lda HGRROWS_H1,x			; Compute hires row
+	sta blackRect_smc0+2
+	sta blackRect_smc1+2
+	sta blackRect_smc2+2
+	sta blackRect_smc3+2
+	sta blackRect_smc4+2
+	sta blackRect_smc5+2
+	lda HGRROWS_L,x
+	sta blackRect_smc0+1
+	sta blackRect_smc1+1
+	sta blackRect_smc2+1
+	sta blackRect_smc3+1
+	sta blackRect_smc4+1
+	sta blackRect_smc5+1
+
+	ldx PARAM0				; Compute hires column
+	lda DIV7_2,x
+	tax
+
+blackRect_smc0:
+	stz $2000,x
+	inx
+
+blackRect_smc1:
+	stz $2000,x
+	inx
+
+blackRect_smc2:
+	stz $2000,x
+	inx
+
+blackRect_smc3:
+	stz $2000,x
+	inx
+
+blackRect_smc4:
+	stz $2000,x
+	inx
+
+blackRect_smc5:
+	stz $2000,x
+
+	pla
+	inc
+	pha
+
+	cmp #8
+	bne blackRect_loop
+
+	pla
+	RESTORE_AX
+	rts
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; LinearFill
 ; A: Byte value to fill
 ; Trashes all registers

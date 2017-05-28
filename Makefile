@@ -28,9 +28,8 @@ hisprite:
 	#osascript V2Make.scpt $(PROJECT_DIR) $(PGM)
 
 hisprite-2plus:
-	$(CL65) -t apple2 --cpu 6502 --start-addr $(ADDR) -l$(PGM)-2plus.lst -o $(PGM)-2plus $(PGM).s
-	atrcopy game.dsk create -f dos33autobrun
-	atrcopy game.dsk asm -b KOLTitle.bin@2000 hisprite-2plus[4:]@6000 --brun 6000 -f -o AUTOBRUN
+	$(CL65) -t apple2 --cpu 6502 --start-addr 0x$(ADDR) -l$(PGM)-2plus.lst -o $(PGM)-2plus $(PGM).s
+	atrcopy game.dsk boot -b hisprite-2plus --brun 6000 -f
 
 clean:
 	rm -f $(PGM)

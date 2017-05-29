@@ -51,11 +51,19 @@ def main(argv):
 	# Blitting functions
 	print "\n"
 	for shift in range(0,7):
+		
+		# Track cycle count of the blitter. We start with fixed overhead:
+		# SAVE_AXY + RESTORE_AXY + rts +    sprite jump table
+		cycleCount = 9 + 12 + 6 +   3 + 4 + 6
+	
 		print "%s_SHIFT%d:" % (niceName,shift)
 		print "\tldx PARAM1"
-		print rowStartCalculatorCode();
-
-		spriteChunks = layoutSpriteChunk(pixelData,width,height,shift,xdraw)
+		cycleCount += 3
+		rowStartCode,extraCycles = rowStartCalculatorCode();
+		print rowStartCode
+		cycleCount += extraCycles
+		
+		spriteChunks = layoutSpriteChunk(pixelData,width,height,shift,xdraw,cycleCount)
 		
 		for row in range(height):
 			for chunkIndex in range(len(spriteChunks)):
@@ -64,11 +72,11 @@ def main(argv):
 		print "\n"				
 
 
-def layoutSpriteChunk(pixelData,width,height,shift,xdraw):
+def layoutSpriteChunk(pixelData,width,height,shift,xdraw,cycleCount):
 
 	colorStreams = byteStreamsFromPixels(pixelData,width,height,shift,bitsForColor,highBitForColor)
 	maskStreams = byteStreamsFromPixels(pixelData,width,height,shift,bitsForMask,highBitForMask)
-	code = generateBlitter(colorStreams,maskStreams,height,xdraw)
+	code = generateBlitter(colorStreams,maskStreams,height,xdraw,cycleCount)
 
 	return code
 
@@ -121,11 +129,14 @@ def byteStreamsFromPixels(pixelData,width,height,shift,bitDelegate,highBitDelega
 	return byteStreams
 
 
-def generateBlitter(colorStreams,maskStreams,height,xdraw):
+def generateBlitter(colorStreams,maskStreams,height,xdraw,baseCycleCount):
 	
 	byteWidth = len(colorStreams[0])
 	spriteChunks = [["" for y in range(height)] for x in range(byteWidth)]
 	
+	cycleCount = baseCycleCount
+	optimizationCount = 0
+
 	for row in range(height):
 		
 		byteSplits = colorStreams[row]
@@ -143,23 +154,30 @@ def generateBlitter(colorStreams,maskStreams,height,xdraw):
 					"\tlda (SCRATCH0),y\n" + \
 					"\teor #%%%s\n" % byteSplits[chunkIndex] + \
 					"\tsta (SCRATCH0),y\n";
+					cycleCount += 5 + 2 + 6
 				else:
 					spriteChunks[chunkIndex][row] = \
 					"\tlda #%%%s\n" % byteSplits[chunkIndex] + \
 					"\tsta (SCRATCH0),y\n";
-
+					cycleCount += 2 + 6
+			else:
+				optimizationCount += 1
+			
 			# Increment indices
 			if chunkIndex == len(byteSplits)-1:
 				spriteChunks[chunkIndex][row] += "\n"
 			else:	
 				spriteChunks[chunkIndex][row] += "\tiny"
+				cycleCount += 2
 
 		# Finish the row
 		if row<height-1:
-			spriteChunks[chunkIndex][row] += "\tinx\n" + rowStartCalculatorCode();
+			rowStartCode,extraCycles = rowStartCalculatorCode()
+			spriteChunks[chunkIndex][row] += "\tinx\n" + rowStartCode;
+			cycleCount += 2 + extraCycles
 		else:
 			spriteChunks[chunkIndex][row] += "\tRESTORE_AXY\n"
-			spriteChunks[chunkIndex][row] += "\trts\n"
+			spriteChunks[chunkIndex][row] += "\trts\t;Cycle count: %d, Optimized %d rows." % (cycleCount,optimizationCount) + "\n"
 			
 	return spriteChunks
 				
@@ -172,7 +190,7 @@ def rowStartCalculatorCode():
 	"\tsta SCRATCH0\n" + \
 	"\tldy PARAM0\n" + \
 	"\tlda DIV7_2,y\n" + \
-	"\ttay\n";		
+	"\ttay\n", 4 + 3 + 4 + 3 + 3 + 4 + 2;
 
 
 def fillOutByte(numBits):

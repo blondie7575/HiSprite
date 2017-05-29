@@ -30,7 +30,7 @@ SCRATCH1		= $1a
 SPRITEPTR_L		= $1b
 SPRITEPTR_H		= $1c
 
-MAXSPRITEINDEX	= 19		; Sprite count - 1
+MAXSPRITEINDEX	= 5		; Sprite count - 1
 MAXPOSX			= 127	; This demo doesn't wanna do 16 bit math
 MAXPOSY			= 127
 
@@ -79,6 +79,7 @@ main:
 ;	sta PARAM1
 ;	jsr BloadHires
 
+mainLoop:
 
 ; Draw sprites
 renderLoop:
@@ -120,7 +121,9 @@ restartList:
 	lda #MAXSPRITEINDEX
 	sta spriteNum
 
-	jsr delayShort
+	VBL_SYNC
+
+;jsr delayShort
 
 ; Background restore
 backgroundLoop:
@@ -160,6 +163,7 @@ backgroundLoop:
 backgroundRestartList:
 	lda #MAXSPRITEINDEX
 	sta spriteNum
+	jmp mainLoop		; Skip movement
 
 movementLoop:
 	; Find our sprite pointer

@@ -38,6 +38,7 @@ META_BUFFERS:
 	.addr metaBuffer17
 	.addr metaBuffer18
 	.addr metaBuffer19
+	.addr metaBuffer20
 
 metaBuffer0:
 	.byte 80	; X pos
@@ -158,6 +159,12 @@ metaBuffer19:
 	.byte 4	; Y pos
 	.byte -3	; X vec
 	.byte -5	; Y vec
+
+metaBuffer20:
+	.byte 61	; X pos
+	.byte 18	; Y pos
+	.byte -1	; X vec
+	.byte +1	; Y vec
 
 
 bgBuffer0:

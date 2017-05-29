@@ -5,18 +5,6 @@
 ;  Copyright (c) 2015 One Girl, One Laptop Productions. All rights reserved.
 ;
 
-BG_BUFFERS:
-	.addr bgBuffer0
-	.addr bgBuffer1
-	.addr bgBuffer2
-	.addr bgBuffer3
-	.addr bgBuffer4
-	.addr bgBuffer5
-	.addr bgBuffer6
-	.addr bgBuffer7
-	.addr bgBuffer8
-	.addr bgBuffer9
-
 META_BUFFERS:
 	.addr metaBuffer0
 	.addr metaBuffer1
@@ -166,54 +154,4 @@ metaBuffer20:
 	.byte -1	; X vec
 	.byte +1	; Y vec
 
-
-bgBuffer0:
-.repeat 48
-	.byte 0
-.endrepeat
-
-bgBuffer1:
-.repeat 48
-.byte 0
-.endrepeat
-
-bgBuffer2:
-.repeat 48
-.byte 0
-.endrepeat
-
-bgBuffer3:
-.repeat 48
-.byte 0
-.endrepeat
-
-bgBuffer4:
-.repeat 48
-.byte 0
-.endrepeat
-
-bgBuffer5:
-.repeat 48
-.byte 0
-.endrepeat
-
-bgBuffer6:
-.repeat 48
-.byte 0
-.endrepeat
-
-bgBuffer7:
-.repeat 48
-.byte 0
-.endrepeat
-
-bgBuffer8:
-.repeat 48
-.byte 0
-.endrepeat
-
-bgBuffer9:
-.repeat 48
-.byte 0
-.endrepeat
 

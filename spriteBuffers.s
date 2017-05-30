@@ -5,19 +5,7 @@
 ;  Copyright (c) 2015 One Girl, One Laptop Productions. All rights reserved.
 ;
 
-;.feature force_range	; needed for my version of ca65
-
-BG_BUFFERS:
-	.addr bgBuffer0
-	.addr bgBuffer1
-	.addr bgBuffer2
-	.addr bgBuffer3
-	.addr bgBuffer4
-	.addr bgBuffer5
-	.addr bgBuffer6
-	.addr bgBuffer7
-	.addr bgBuffer8
-	.addr bgBuffer9
+.feature force_range	; needed for my version of ca65
 
 META_BUFFERS:
 	.addr metaBuffer0
@@ -40,6 +28,7 @@ META_BUFFERS:
 	.addr metaBuffer17
 	.addr metaBuffer18
 	.addr metaBuffer19
+	.addr metaBuffer20
 
 metaBuffer0:
 	.byte 80	; X pos
@@ -161,54 +150,10 @@ metaBuffer19:
 	.byte -3	; X vec
 	.byte -5	; Y vec
 
+metaBuffer20:
+	.byte 61	; X pos
+	.byte 18	; Y pos
+	.byte -1	; X vec
+	.byte +1	; Y vec
 
-bgBuffer0:
-.repeat 48
-	.byte 0
-.endrepeat
-
-bgBuffer1:
-.repeat 48
-.byte 0
-.endrepeat
-
-bgBuffer2:
-.repeat 48
-.byte 0
-.endrepeat
-
-bgBuffer3:
-.repeat 48
-.byte 0
-.endrepeat
-
-bgBuffer4:
-.repeat 48
-.byte 0
-.endrepeat
-
-bgBuffer5:
-.repeat 48
-.byte 0
-.endrepeat
-
-bgBuffer6:
-.repeat 48
-.byte 0
-.endrepeat
-
-bgBuffer7:
-.repeat 48
-.byte 0
-.endrepeat
-
-bgBuffer8:
-.repeat 48
-.byte 0
-.endrepeat
-
-bgBuffer9:
-.repeat 48
-.byte 0
-.endrepeat
 

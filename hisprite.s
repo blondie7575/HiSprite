@@ -32,7 +32,7 @@ SCRATCH1		= $1a
 SPRITEPTR_L		= $1b
 SPRITEPTR_H		= $1c
 
-MAXSPRITEINDEX	= 19		; Sprite count - 1
+MAXSPRITEINDEX	= 5		; Sprite count - 1
 MAXPOSX			= 127	; This demo doesn't wanna do 16 bit math
 MAXPOSY			= 127
 
@@ -75,12 +75,7 @@ main:
 	lda #$00
 	jsr VenetianFill
 
-;	lda #<bgFilename
-;	sta PARAM0
-;	lda #>bgFilename
-;	sta PARAM1
-;	jsr BloadHires
-
+mainLoop:
 
 ; Draw sprites
 renderLoop:
@@ -104,13 +99,6 @@ renderLoop:
 	lda (SPRITEPTR_L),y
 	sta PARAM0
 
-	; Calculate sprite background buffer location
-;	lda BG_BUFFERS,x
-;	sta PARAM2
-;	lda BG_BUFFERS+1,x
-;	sta PARAM3
-;	jsr SaveBackground
-
 	jsr BOXW_MAG
 
 	; Next sprite
@@ -122,7 +110,8 @@ restartList:
 	lda #MAXSPRITEINDEX
 	sta spriteNum
 
-	jsr delayShort
+	VBL_SYNC
+
 
 ; Background restore
 backgroundLoop:
@@ -146,12 +135,6 @@ backgroundLoop:
 	lda (SPRITEPTR_L),y
 	sta PARAM0
 
-	; Calculate sprite background buffer location
-;lda BG_BUFFERS,x
-;	sta PARAM2
-;	lda BG_BUFFERS+1,x
-;	sta PARAM3
-;	jsr RestoreBackground
 	jsr BlackRect
 
 	; Next sprite
@@ -162,6 +145,7 @@ backgroundLoop:
 backgroundRestartList:
 	lda #MAXSPRITEINDEX
 	sta spriteNum
+jmp mainLoop		; Skip movement
 
 movementLoop:
 	; Find our sprite pointer

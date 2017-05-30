@@ -157,44 +157,11 @@
 ; Rendering macros
 ;
 
-
-.macro LDY_AVIEW
-	asl				; Find our new view record
-	asl
-	asl
-	asl				; Records are 16 bytes wide
-	tay
-.endmacro
-
-
-.macro LDY_ACTIVEVIEW
-	lda WG_ACTIVEVIEW	; Find our new view record
-	LDY_AVIEW
-.endmacro
-
-
-.macro LDX_ACTIVEVIEW
-	lda WG_ACTIVEVIEW	; Find our new view record
-	asl
-	asl
-	asl
-	asl				; Records are 16 bytes wide
-	tax
-.endmacro
-
-
-.macro LDY_FOCUSVIEW
-	lda WG_FOCUSVIEW	; Find our new view record
-	LDY_AVIEW
-.endmacro
-
-
-.macro VBL_SYNC				; Synchronize with vertical blanking
-	lda #$80
-;macroWaitVBLToFinish:
-;	bit	RDVBLBAR
-;	bmi	macroWaitVBLToFinish
+.macro VBL_SYNC			; Synchronize with vertical blanking
+@macroWaitVBLToFinish:
+	lda $C019
+	bpl @macroWaitVBLToFinish
 @macroWaitVBLToStart:
-;	bit	RDVBLBAR
-;	bpl	@macroWaitVBLToStart
+	lda $C019
+	bmi @macroWaitVBLToStart
 .endmacro

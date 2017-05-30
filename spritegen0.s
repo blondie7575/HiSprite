@@ -201,7 +201,7 @@ BOXW_MAG_SHIFT0:
 	iny
 
 	RESTORE_AXY
-	rts
+	rts	;Cycle count: 497, Optimized 26 rows.
 
 
 
@@ -371,7 +371,7 @@ BOXW_MAG_SHIFT1:
 	iny
 
 	RESTORE_AXY
-	rts
+	rts	;Cycle count: 497, Optimized 26 rows.
 
 
 
@@ -541,7 +541,7 @@ BOXW_MAG_SHIFT2:
 	iny
 
 	RESTORE_AXY
-	rts
+	rts	;Cycle count: 497, Optimized 26 rows.
 
 
 
@@ -711,7 +711,7 @@ BOXW_MAG_SHIFT3:
 	iny
 
 	RESTORE_AXY
-	rts
+	rts	;Cycle count: 497, Optimized 26 rows.
 
 
 
@@ -881,7 +881,7 @@ BOXW_MAG_SHIFT4:
 	iny
 
 	RESTORE_AXY
-	rts
+	rts	;Cycle count: 497, Optimized 26 rows.
 
 
 
@@ -1051,7 +1051,7 @@ BOXW_MAG_SHIFT5:
 	iny
 
 	RESTORE_AXY
-	rts
+	rts	;Cycle count: 497, Optimized 26 rows.
 
 
 
@@ -1221,7 +1221,7 @@ BOXW_MAG_SHIFT6:
 	iny
 
 	RESTORE_AXY
-	rts
+	rts	;Cycle count: 497, Optimized 26 rows.
 
 
 

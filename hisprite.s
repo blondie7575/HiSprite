@@ -32,6 +32,10 @@ SCRATCH1		= $1a
 SPRITEPTR_L		= $1b
 SPRITEPTR_H		= $1c
 
+MAXSPRITEINDEX	= 19		; Sprite count - 1
+MAXPOSX			= 127	; This demo doesn't wanna do 16 bit math
+MAXPOSY			= 127
+
 ; Macros
 .macro BLITBYTE xPos,yPos,addr
 	lda #xPos
@@ -101,11 +105,11 @@ renderLoop:
 	sta PARAM0
 
 	; Calculate sprite background buffer location
-	lda BG_BUFFERS,x
-	sta PARAM2
-	lda BG_BUFFERS+1,x
-	sta PARAM3
-	jsr SaveBackground
+;	lda BG_BUFFERS,x
+;	sta PARAM2
+;	lda BG_BUFFERS+1,x
+;	sta PARAM3
+;	jsr SaveBackground
 
 	jsr BOXW_MAG
 
@@ -115,10 +119,9 @@ renderLoop:
 	jmp renderLoop
 
 restartList:
-	lda #9
+	lda #MAXSPRITEINDEX
 	sta spriteNum
 
-	jsr delayShort
 	jsr delayShort
 
 ; Background restore
@@ -144,11 +147,12 @@ backgroundLoop:
 	sta PARAM0
 
 	; Calculate sprite background buffer location
-	lda BG_BUFFERS,x
-	sta PARAM2
-	lda BG_BUFFERS+1,x
-	sta PARAM3
-	jsr RestoreBackground
+;lda BG_BUFFERS,x
+;	sta PARAM2
+;	lda BG_BUFFERS+1,x
+;	sta PARAM3
+;	jsr RestoreBackground
+	jsr BlackRect
 
 	; Next sprite
 	dec spriteNum
@@ -156,7 +160,7 @@ backgroundLoop:
 	jmp backgroundLoop
 
 backgroundRestartList:
-	lda #9
+	lda #MAXSPRITEINDEX
 	sta spriteNum
 
 movementLoop:
@@ -169,31 +173,74 @@ movementLoop:
 	lda META_BUFFERS,x
 	sta SPRITEPTR_L
 
-	; Adjust X coordinate
+	; Apply X velocity to X coordinate
+	clc
 	ldy #0
 	lda (SPRITEPTR_L),y
-.ifpC02
-	inc
-	inc
-.else
-	clc
-	adc #2
-.endif
-	cmp #132
-	beq resetX
+	ldy #2
+	adc (SPRITEPTR_L),y
+	bmi flipX
+	cmp #MAXPOSX
+	bpl flipX
 
-storeAndContinue:
+	; Store the new X
+	ldy #0
 	sta (SPRITEPTR_L),y
+
+adjustY:
+	; Apply Y velocity to Y coordinate
+	clc
+	ldy #1
+	lda (SPRITEPTR_L),y
+	ldy #3
+	adc (SPRITEPTR_L),y
+	bmi flipY
+	cmp #MAXPOSY
+	bpl flipY
+
+	; Store the new Y
+	ldy #1
+	sta (SPRITEPTR_L),y
+
+continueMovementList:
 	dec spriteNum
 	bmi movementRestartList
 	jmp movementLoop
 
-resetX:
-	lda #0
-	beq storeAndContinue
+flipX:
+	lda (SPRITEPTR_L),y
+	eor #$ff
+.ifpC02
+	inc
+.else
+	clc
+	adc #1
+.endif
+	sta (SPRITEPTR_L),y
+.ifpC02
+	bra adjustY
+.else
+	jmp adjustY
+.endif
+
+flipY:
+	lda (SPRITEPTR_L),y
+	eor #$ff
+.ifpC02
+	inc
+.else
+	clc
+	adc #1
+.endif
+	sta (SPRITEPTR_L),y
+.ifpC02
+	bra continueMovementList
+.else
+	jmp continueMovementList
+.endif
 
 movementRestartList:
-	lda #9
+	lda #MAXSPRITEINDEX
 	sta spriteNum
 	jmp renderLoop
 
@@ -230,7 +277,7 @@ delayShortInner:
 
 
 spriteNum:
-	.byte 9
+	.byte MAXSPRITEINDEX
 bgFilename:
 	.byte "KOL",0
 
@@ -250,3 +297,4 @@ bgFilename:
 .SEGMENT "STARTUP"
 .SEGMENT "INIT"
 .SEGMENT "LOWCODE"
+.SEGMENT "ONCE"

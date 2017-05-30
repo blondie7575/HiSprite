@@ -199,6 +199,112 @@ restoreBackground_smc5:
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; BlackRect
+; PARAM0: X pos
+; PARAM1: Y pos
+;
+; Assumes 4-byte-wide, 8px-high sprites
+;
+BlackRect:
+	SAVE_AX
+	lda #0
+	pha
+
+blackRect_loop:
+	clc
+	pla
+	pha
+	adc	PARAM1	; Calculate Y line
+	tax
+
+	lda HGRROWS_H1,x			; Compute hires row
+	sta blackRect_smc0+2
+	sta blackRect_smc1+2
+	sta blackRect_smc2+2
+	sta blackRect_smc3+2
+	sta blackRect_smc4+2
+	sta blackRect_smc5+2
+	lda HGRROWS_L,x
+	sta blackRect_smc0+1
+	sta blackRect_smc1+1
+	sta blackRect_smc2+1
+	sta blackRect_smc3+1
+	sta blackRect_smc4+1
+	sta blackRect_smc5+1
+
+	ldx PARAM0				; Compute hires column
+	lda DIV7_2,x
+	tax
+
+.ifpC02
+.else
+	lda #0
+.endif
+blackRect_smc0:
+.ifpC02
+	stz $2000,x
+.else
+	sta $2000,x
+.endif
+	inx
+
+blackRect_smc1:
+.ifpC02
+	stz $2000,x
+.else
+	sta $2000,x
+.endif
+	inx
+
+blackRect_smc2:
+.ifpC02
+	stz $2000,x
+.else
+	sta $2000,x
+.endif
+	inx
+
+blackRect_smc3:
+.ifpC02
+	stz $2000,x
+.else
+	sta $2000,x
+.endif
+	inx
+
+blackRect_smc4:
+.ifpC02
+	stz $2000,x
+.else
+	sta $2000,x
+.endif
+	inx
+
+blackRect_smc5:
+.ifpC02
+	stz $2000,x
+.else
+	sta $2000,x
+.endif
+
+	pla
+.ifpC02
+	inc
+.else
+	clc
+	adc #1
+.endif
+	pha
+
+	cmp #8
+	bne blackRect_loop
+
+	pla
+	RESTORE_AX
+	rts
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; LinearFill
 ; A: Byte value to fill
 ; Trashes all registers

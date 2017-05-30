@@ -16,23 +16,30 @@ ADDR=6000
 
 PGM=hisprite
 
+.PHONY: linux
+
 all: hisprite hisprite-2plus
 
+linux: hisprite-2e hisprite-2plus
 
 hisprite:
 	$(CL65) -t apple2enh --start-addr $(ADDR) -l$(PGM).lst -o $(PGM) $(PGM).s
 	java -jar $(AC) -d $(PGM).dsk $(PGM)
 	java -jar $(AC) -p $(PGM).dsk $(PGM) BIN 0x$(ADDR) < $(PGM)
-	#rm -f $(PGM)
-	#rm -f $(PGM).o
-	#osascript V2Make.scpt $(PROJECT_DIR) $(PGM)
+	rm -f $(PGM)
+	rm -f $(PGM).o
+	osascript V2Make.scpt $(PROJECT_DIR) $(PGM)
+
+hisprite-2e:
+	$(CL65) -t apple2enh --start-addr 0x$(ADDR) -l$(PGM)-2e.lst -o $(PGM)-2e $(PGM).s
+	atrcopy game2e.dsk boot -b hisprite-2e --brun 6000 -f
 
 hisprite-2plus:
 	$(CL65) -t apple2 --cpu 6502 --start-addr 0x$(ADDR) -l$(PGM)-2plus.lst -o $(PGM)-2plus $(PGM).s
-	atrcopy game.dsk boot -b hisprite-2plus --brun 6000 -f
+	atrcopy game2plus.dsk boot -b hisprite-2plus --brun 6000 -f
 
 clean:
 	rm -f $(PGM)
 	rm -f $(PGM).o
-	rm -f $(PGM)-2plus
-	rm -f $(PGM)-2plus.o
+	rm -f $(PGM)-2plus $(PGM)-2plus.o game2plus.dsk
+	rm -f $(PGM)-2e $(PGM)-2e.o game2e.dsk

@@ -72,8 +72,8 @@ MAXPOSY			= 127
 main:
 	jsr EnableHires
 
-	;lda #$00
-	;jsr VenetianFill
+	lda #$00
+	jsr VenetianFill
 
 ;	lda #<bgFilename
 ;	sta PARAM0

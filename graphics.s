@@ -14,6 +14,7 @@ EnableHires:
 	lda TEXT
 	lda HIRES1
 	lda HIRES2
+	lda PAGE1
 	rts
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -88,7 +89,12 @@ saveBackground_smc5:
 	iny
 
 	pla
+.ifpC02
 	inc
+.else
+	clc
+	adc #1
+.endif
 	pha
 
 	cpy #48
@@ -176,7 +182,12 @@ restoreBackground_smc5:
 	iny
 
 	pla
+.ifpC02
 	inc
+.else
+	clc
+	adc #1
+.endif
 	pha
 
 	cpy #48
@@ -225,31 +236,64 @@ blackRect_loop:
 	lda DIV7_2,x
 	tax
 
+.ifpC02
+.else
+	lda #0
+.endif
 blackRect_smc0:
+.ifpC02
 	stz $2000,x
+.else
+	sta $2000,x
+.endif
 	inx
 
 blackRect_smc1:
+.ifpC02
 	stz $2000,x
+.else
+	sta $2000,x
+.endif
 	inx
 
 blackRect_smc2:
+.ifpC02
 	stz $2000,x
+.else
+	sta $2000,x
+.endif
 	inx
 
 blackRect_smc3:
+.ifpC02
 	stz $2000,x
+.else
+	sta $2000,x
+.endif
 	inx
 
 blackRect_smc4:
+.ifpC02
 	stz $2000,x
+.else
+	sta $2000,x
+.endif
 	inx
 
 blackRect_smc5:
+.ifpC02
 	stz $2000,x
+.else
+	sta $2000,x
+.endif
 
 	pla
+.ifpC02
 	inc
+.else
+	clc
+	adc #1
+.endif
 	pha
 
 	cmp #8
@@ -313,6 +357,8 @@ KBD				= $c000
 KBDSTRB			= $c010
 
 
+; ProDOS v2 only works on 65C02, so skip this stuff for classic 6502 support
+.ifpC02
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; CommandLine
 ;
@@ -378,3 +424,4 @@ BloadHires_done:
 
 BloadHires_buffer:
 	.byte "BLOAD ",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+.endif

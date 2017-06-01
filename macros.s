@@ -16,42 +16,77 @@
 
 .macro SAVE_AXY				; Saves all registers
 	pha
+.ifpC02
 	phx
 	phy
+.else
+	txa
+	pha
+	tya
+	pha
+.endif
 .endmacro
 
 
 .macro RESTORE_AXY			; Restores all registers
+.ifpC02
 	ply
 	plx
+.else
+	pla
+	tay
+	pla
+	tax
+.endif
 	pla
 .endmacro
 
 
 .macro SAVE_AY				; Saves accumulator and Y index
 	pha
+.ifpC02
 	phy
+.else
+	tya
+	pha
+.endif
 .endmacro
 
 
 .macro RESTORE_AY			; Restores accumulator and Y index
+.ifpC02
 	ply
+.else
+	pla
+	tay
+.endif
 	pla
 .endmacro
 
 
 .macro SAVE_AX				; Saves accumulator and X index
 	pha
+.ifpC02
 	phx
+.else
+	tax
+	pha
+.endif
 .endmacro
 
 
 .macro RESTORE_AX			; Restores accumulator and X index
+.ifpC02
 	plx
+.else
+	pla
+	tax
+.endif
 	pla
 .endmacro
 
-
+; Saving only XY without clobbering the accumulator only possible on 65C02
+.ifpC02
 .macro SAVE_XY				; Saves X and Y index
 	phx
 	phy
@@ -62,7 +97,7 @@
 	ply
 	plx
 .endmacro
-
+.endif
 
 .macro SAVE_ZPP				; Saves Zero Page locations we use for parameters
 	lda	PARAM0

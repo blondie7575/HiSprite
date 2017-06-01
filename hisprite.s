@@ -12,6 +12,8 @@
 
 ; Softswitches
 TEXT = $c050
+PAGE1 = $c054
+PAGE2 = $c055
 HIRES1 = $c057
 HIRES2 = $c058
 
@@ -192,16 +194,34 @@ continueMovementList:
 flipX:
 	lda (SPRITEPTR_L),y
 	eor #$ff
+.ifpC02
 	inc
+.else
+	clc
+	adc #1
+.endif
 	sta (SPRITEPTR_L),y
+.ifpC02
 	bra adjustY
+.else
+	jmp adjustY
+.endif
 
 flipY:
 	lda (SPRITEPTR_L),y
 	eor #$ff
+.ifpC02
 	inc
+.else
+	clc
+	adc #1
+.endif
 	sta (SPRITEPTR_L),y
+.ifpC02
 	bra continueMovementList
+.else
+	jmp continueMovementList
+.endif
 
 movementRestartList:
 	lda #MAXSPRITEINDEX
@@ -261,3 +281,4 @@ bgFilename:
 .SEGMENT "STARTUP"
 .SEGMENT "INIT"
 .SEGMENT "LOWCODE"
+.SEGMENT "ONCE"

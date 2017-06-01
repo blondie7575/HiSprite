@@ -5,6 +5,8 @@
 ;  Copyright (c) 2015 One Girl, One Laptop Productions. All rights reserved.
 ;
 
+.feature force_range	; needed for my version of ca65
+
 META_BUFFERS:
 	.addr metaBuffer0
 	.addr metaBuffer1

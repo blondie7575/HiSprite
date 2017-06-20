@@ -19,9 +19,14 @@ def main(argv):
 
 	pngfile = sys.argv[1]
 	xdraw = 0
-	if len(argv)>1 and sys.argv[2] == "--xdraw":
-		xdraw = 1
-
+	black = 0
+	if len(argv)>1:
+		if sys.argv[2] == "--xdraw":
+			xdraw = 1
+		else:
+			if sys.argv[2] == "--black":
+				black = 1
+	
 	reader = png.Reader(pngfile)
 	try:
 		pngdata = reader.asRGB8()
@@ -33,7 +38,10 @@ def main(argv):
 	pixelData = list(pngdata[2])
 	byteWidth = width/2+1+1	 # TODO: Calculate a power of two for this
 	niceName = os.path.splitext(pngfile)[0].upper()
-	
+
+	if black:
+		niceName = "BLACK"
+
 	disclaimer()
 	
 	# Prologue
@@ -63,7 +71,7 @@ def main(argv):
 		print rowStartCode
 		cycleCount += extraCycles
 		
-		spriteChunks = layoutSpriteChunk(pixelData,width,height,shift,xdraw,cycleCount)
+		spriteChunks = layoutSpriteChunk(pixelData,width,height,shift,xdraw,black,cycleCount)
 		
 		for row in range(height):
 			for chunkIndex in range(len(spriteChunks)):
@@ -72,11 +80,11 @@ def main(argv):
 		print "\n"				
 
 
-def layoutSpriteChunk(pixelData,width,height,shift,xdraw,cycleCount):
+def layoutSpriteChunk(pixelData,width,height,shift,xdraw,black,cycleCount):
 
 	colorStreams = byteStreamsFromPixels(pixelData,width,height,shift,bitsForColor,highBitForColor)
 	maskStreams = byteStreamsFromPixels(pixelData,width,height,shift,bitsForMask,highBitForMask)
-	code = generateBlitter(colorStreams,maskStreams,height,xdraw,cycleCount)
+	code = generateBlitter(colorStreams,maskStreams,height,xdraw,black,cycleCount)
 
 	return code
 
@@ -129,7 +137,7 @@ def byteStreamsFromPixels(pixelData,width,height,shift,bitDelegate,highBitDelega
 	return byteStreams
 
 
-def generateBlitter(colorStreams,maskStreams,height,xdraw,baseCycleCount):
+def generateBlitter(colorStreams,maskStreams,height,xdraw,black,baseCycleCount):
 	
 	byteWidth = len(colorStreams[0])
 	spriteChunks = [["" for y in range(height)] for x in range(byteWidth)]
@@ -149,17 +157,23 @@ def generateBlitter(colorStreams,maskStreams,height,xdraw,baseCycleCount):
 				byteSplits[chunkIndex] != "10000000":
 			
 				# Store byte into video memory
-				if xdraw:
+				if xdraw:						# Option to exclusive-or pixels into background
 					spriteChunks[chunkIndex][row] = \
 					"\tlda (SCRATCH0),y\n" + \
 					"\teor #%%%s\n" % byteSplits[chunkIndex] + \
 					"\tsta (SCRATCH0),y\n";
 					cycleCount += 5 + 2 + 6
 				else:
-					spriteChunks[chunkIndex][row] = \
-					"\tlda #%%%s\n" % byteSplits[chunkIndex] + \
-					"\tsta (SCRATCH0),y\n";
-					cycleCount += 2 + 6
+					if black:					# Option to write "black-out" pixels instead
+						spriteChunks[chunkIndex][row] = \
+						"\tlda #0\n" + \
+						"\tsta (SCRATCH0),y\n";
+						cycleCount += 2 + 6
+					else:						# Regular blitting
+						spriteChunks[chunkIndex][row] = \
+						"\tlda #%%%s\n" % byteSplits[chunkIndex] + \
+						"\tsta (SCRATCH0),y\n";
+						cycleCount += 2 + 6
 			else:
 				optimizationCount += 1
 			

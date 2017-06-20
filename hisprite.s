@@ -30,9 +30,11 @@ SCRATCH1		= $1a
 SPRITEPTR_L		= $1b
 SPRITEPTR_H		= $1c
 
-MAXSPRITEINDEX	= 5		; Sprite count - 1
-MAXPOSX			= 127	; This demo doesn't wanna do 16 bit math
-MAXPOSY			= 127
+MAXSPRITEINDEX		= 3		; Sprite count - 1
+MAXPOSX				= 127	; This demo doesn't wanna do 16 bit math
+MAXPOSY				= 127
+MAXLOCALBATCHINDEX	= 3		; Sprites in batch - 1
+MAXBATCHINDEX		= 0		; Number of batches - 1
 
 ; Macros
 .macro BLITBYTE xPos,yPos,addr
@@ -75,39 +77,43 @@ main:
 
 mainLoop:
 
-; Draw sprites
+
 renderLoop:
 
 	; Find our sprite pointer
-	lda spriteNum
-	asl
-	tax
-	lda META_BUFFERS+1,x
-	sta SPRITEPTR_H
-	lda META_BUFFERS,x
-	sta SPRITEPTR_L
+	lda spriteNum ; 4
+	asl ; 2
+	tax ; 2
+	lda META_BUFFERS+1,x ; 4
+	sta SPRITEPTR_H ; 3
+	lda META_BUFFERS,x ; 4
+	sta SPRITEPTR_L ; 3
 
 	; Find Y coordinate
-	ldy #1
-	lda (SPRITEPTR_L),y
-	sta PARAM1
+	ldy #1 ; 2
+	lda (SPRITEPTR_L),y ; 5
+	sta PARAM1 ; 3
 
 	; Find X coordinate
-	ldy #0
-	lda (SPRITEPTR_L),y
-	sta PARAM0
+	ldy #0 ; 2
+	lda (SPRITEPTR_L),y ; 5
+	sta PARAM0 ; 3
 
-	jsr BOXW_MAG
+	jsr BOXW_MAG ; 6		48 cycles overhead to here
 
 	; Next sprite
-	dec spriteNum
-	bmi restartList
-	jmp renderLoop
+	dec spriteNum ; 6
+	dec batchLocalIndex ; 6
+	bmi restartList ; 2
+	jmp renderLoop ; 3			65 cycles overhead per sprite
 
 restartList:
-	lda #MAXSPRITEINDEX
+	lda batchMaxIndex
 	sta spriteNum
+	lda #MAXLOCALBATCHINDEX
+	sta batchLocalIndex
 
+;	jmp batchLoop
 	VBL_SYNC
 
 
@@ -133,17 +139,21 @@ backgroundLoop:
 	lda (SPRITEPTR_L),y
 	sta PARAM0
 
-	jsr BlackRect
+	jsr BLACK
 
 	; Next sprite
 	dec spriteNum
+	dec batchLocalIndex
 	bmi backgroundRestartList
-	jmp backgroundLoop
+	jmp backgroundLoop		; 65 cycles overhead per rect
 
 backgroundRestartList:
-	lda #MAXSPRITEINDEX
-	sta spriteNum
-jmp mainLoop		; Skip movement
+;	lda batchMaxIndex
+;	sta spriteNum
+	lda #MAXLOCALBATCHINDEX
+	sta batchLocalIndex
+
+	jmp batchLoop		; Skip movement
 
 movementLoop:
 	; Find our sprite pointer
@@ -204,9 +214,18 @@ flipY:
 	bra continueMovementList
 
 movementRestartList:
+
+batchLoop:
+	dec batchIndex
+	bpl batchContinue
+
+	lda #MAXBATCHINDEX
+	sta batchIndex
 	lda #MAXSPRITEINDEX
 	sta spriteNum
-	jmp renderLoop
+
+batchContinue:
+	jmp mainLoop
 
 
 	rts
@@ -242,6 +261,14 @@ delayShortInner:
 
 spriteNum:
 	.byte MAXSPRITEINDEX
+batchIndex:
+	.byte MAXBATCHINDEX
+batchMaxIndex:
+	.byte MAXSPRITEINDEX
+batchLocalIndex:
+	.byte MAXLOCALBATCHINDEX
+
+
 bgFilename:
 	.byte "KOL",0
 
@@ -250,6 +277,7 @@ bgFilename:
 .include "hgrtableY.s"
 .include "spriteBuffers.s"
 .include "spritegen0.s"
+.include "spritegen0b.s"
 ;.include "spritegen1.s"
 ;.include "spritegen2.s"
 ;.include "spritegen3.s"

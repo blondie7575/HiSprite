@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
+		700F8D261EF8CFA100F103DE /* spritegen0b.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = spritegen0b.s; sourceTree = "<group>"; };
 		7018A7A81E883A3A00C57515 /* spriteBuffers.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = spriteBuffers.s; sourceTree = "<group>"; };
 		701B5E0E1D84810000E6D330 /* macros.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = macros.s; sourceTree = "<group>"; };
 		701B5E0F1D84810000E6D330 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
@@ -35,6 +36,7 @@
 				701B5E121D8481C800E6D330 /* hgrtableX.s */,
 				701B5E171D84824400E6D330 /* hgrtableY.s */,
 				701B5E131D84820100E6D330 /* spritegen0.s */,
+				700F8D261EF8CFA100F103DE /* spritegen0b.s */,
 				701B5E141D84823300E6D330 /* spritegen1.s */,
 				701B5E151D84823300E6D330 /* spritegen2.s */,
 				701B5E161D84823300E6D330 /* spritegen3.s */,

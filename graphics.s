@@ -192,72 +192,73 @@ restoreBackground_smc5:
 ; PARAM0: X pos
 ; PARAM1: Y pos
 ;
-; Assumes 4-byte-wide, 8px-high sprites
+; Assumes 6-byte-wide, 8px-high sprites
+; 1099 cycles per call
 ;
 BlackRect:
-	SAVE_AX
-	lda #0
-	pha
+SAVE_AX ; 6
+	lda #0 ; 2
+	pha ; 3			9 setup
 
 blackRect_loop:
-	clc
-	pla
-	pha
-	adc	PARAM1	; Calculate Y line
-	tax
+	clc ; 2
+	pla ; 4
+	pha ; 3
+	adc	PARAM1 ; 3	; Calculate Y line
+	tax ; 2
 
-	lda HGRROWS_H1,x			; Compute hires row
-	sta blackRect_smc0+2
-	sta blackRect_smc1+2
-	sta blackRect_smc2+2
-	sta blackRect_smc3+2
-	sta blackRect_smc4+2
-	sta blackRect_smc5+2
-	lda HGRROWS_L,x
-	sta blackRect_smc0+1
-	sta blackRect_smc1+1
-	sta blackRect_smc2+1
-	sta blackRect_smc3+1
-	sta blackRect_smc4+1
-	sta blackRect_smc5+1
+	lda HGRROWS_H1,x ; 4			; Compute hires row
+	sta blackRect_smc0+2 ; 4
+	sta blackRect_smc1+2 ; 4
+	sta blackRect_smc2+2 ; 4
+	sta blackRect_smc3+2 ; 4
+	sta blackRect_smc4+2 ; 4
+	sta blackRect_smc5+2 ; 4
+	lda HGRROWS_L,x ; 4
+	sta blackRect_smc0+1 ; 4
+	sta blackRect_smc1+1 ; 4
+	sta blackRect_smc2+1 ; 4
+	sta blackRect_smc3+1 ; 4
+	sta blackRect_smc4+1 ; 4
+	sta blackRect_smc5+1 ; 4
 
-	ldx PARAM0				; Compute hires column
-	lda DIV7_2,x
-	tax
-
+	ldx PARAM0 ; 3				; Compute hires column
+	lda DIV7_2,x ; 4
+	tax ; 2
+							; 79
 blackRect_smc0:
-	stz $2000,x
-	inx
+	stz $2000,x ; 5
+	inx ; 2
 
 blackRect_smc1:
-	stz $2000,x
-	inx
+	stz $2000,x ; 5
+	inx ; 2
 
 blackRect_smc2:
-	stz $2000,x
-	inx
+	stz $2000,x ; 5
+	inx ; 2
 
 blackRect_smc3:
-	stz $2000,x
-	inx
+	stz $2000,x ; 5
+	inx ; 2
 
 blackRect_smc4:
-	stz $2000,x
-	inx
+	stz $2000,x ; 5
+	inx ; 2
 
 blackRect_smc5:
-	stz $2000,x
+	stz $2000,x ; 5
 
-	pla
-	inc
-	pha
+	pla ; 4
+	inc ;2
+	pha ; 3
 
-	cmp #8
-	bne blackRect_loop
+	cmp #8 ; 2
+	bne blackRect_loop ; 2		134 per row
 
-	pla
-	RESTORE_AX
-	rts
+	pla ; 4
+	RESTORE_AX ; 8
+	rts ; 6				18 cleanup
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

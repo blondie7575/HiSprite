@@ -98,11 +98,16 @@ class Listing(object):
     def __init__(self, assembler):
         self.assembler = assembler
         self.lines = [self.disclaimer]
+        self.current = None
+        self.desired_count = 1
+        self.stash_list = []
 
     def __str__(self):
+        self.flush_stash()
         return "\n".join(self.lines) + "\n"
 
     def out(self, line):
+        self.flush_stash()
         self.lines.append(line)
 
     def out_append_last(self, line):
@@ -120,11 +125,31 @@ class Listing(object):
     def addr(self, text):
         self.out(self.assembler.address(text))
 
-    def byte(self, text):
-        self.out(self.assembler.byte(text))
+    def flush_stash(self):
+        if self.current is not None and len(self.stash_list) > 0:
+            self.lines.append(self.current(", ".join(self.stash_list)))
+        self.current = None
+        self.stash_list = []
+        self.desired_count = 1
 
-    def word(self, text):
-        self.out(self.assembler.word(text))
+    def stash(self, desired, text, per_line):
+        if self.current is not None and (self.current != desired or per_line == 1):
+            self.flush_stash()
+        if per_line > 1:
+            if self.current is None:
+                self.current = desired
+                self.desired_count = per_line
+            self.stash_list.append(text)
+            if len(self.stash_list) >= self.desired_count:
+                self.flush_stash()
+        else:
+            self.out(desired(text))
+
+    def byte(self, text, per_line=1):
+        self.stash(self.assembler.byte, text, per_line)
+
+    def word(self, text, per_line=1):
+        self.stash(self.assembler.word, text, per_line)
 
 
 class Sprite(Listing):
@@ -435,27 +460,29 @@ class HorizontalLookup(Listing):
         self.label("HGRROWS_H1")
         for y in range(192):
             addr = 0x2000 + offsets[y]
-            self.byte("$%02x" % (addr // 256))
+            self.byte("$%02x" % (addr // 256), 8)
 
+        self.out("\n")
         self.label("HGRROWS_H2")
         for y in range(192):
             addr = 0x4000 + offsets[y]
-            self.byte("$%02x" % (addr // 256))
+            self.byte("$%02x" % (addr // 256), 8)
 
+        self.out("\n")
         self.label("HGRROWS_L")
         for y in range(192):
             addr = offsets[y]
-            self.byte("$%02x" % (addr & 0xff))
+            self.byte("$%02x" % (addr & 0xff), 8)
 
     def generate_tables(self):
         self.label("DIV7_2")
         for pixel in range(140):
-            self.byte("$%02x" % ((pixel / 7)*2))
+            self.byte("$%02x" % ((pixel / 7)*2), 7)
 
         self.out("\n")
         self.label("MOD7_2")
         for pixel in range(140):
-            self.byte("$%02x" % ((pixel % 7)*2))
+            self.byte("$%02x" % ((pixel % 7)*2), 7)
 
 
 if __name__ == "__main__":

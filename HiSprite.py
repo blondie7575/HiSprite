@@ -191,9 +191,6 @@ class Sprite(Listing):
         # Prologue
         self.label("%s" % self.niceName)
         self.comment("%d bytes per row" % self.screen.byteWidth(self.width))
-        self.asm("SAVE_AXY")
-        self.asm("ldy PARAM0")
-        self.asm("ldx MOD%d_%d,y" % (self.screen.numShifts, self.screen.bitsPerPixel))
 
         if self.processor == "any":
             self.out(".ifpC02")
@@ -208,7 +205,35 @@ class Sprite(Listing):
         else:
             raise RuntimeError("Processor %s not supported" % self.processor)
 
+    def save_axy_65C02(self):
+        self.asm("pha")
+        self.asm("phx")
+        self.asm("phy")
+
+    def restore_axy_65C02(self):
+        self.asm("ply")
+        self.asm("plx")
+        self.asm("pla")
+
+    def save_axy_6502(self):
+        self.asm("pha")
+        self.asm("txa")
+        self.asm("pha")
+        self.asm("tya")
+        self.asm("pha")
+
+    def restore_axy_6502(self):
+        self.asm("pla")
+        self.asm("tay")
+        self.asm("pla")
+        self.asm("tax")
+        self.asm("pla")
+
     def jump65C02(self):
+        self.save_axy_65C02()
+        self.asm("ldy PARAM0")
+        self.asm("ldx MOD%d_%d,y" % (self.screen.numShifts, self.screen.bitsPerPixel))
+
         self.asm("jmp (%s_JMP,x)\n" % (self.niceName))
         offset_suffix = ""
         
@@ -218,6 +243,10 @@ class Sprite(Listing):
             self.addr("%s_SHIFT%d" % (self.niceName, shift))
 
     def jump6502(self):
+        self.save_axy_6502()
+        self.asm("ldy PARAM0")
+        self.asm("ldx MOD%d_%d,y" % (self.screen.numShifts, self.screen.bitsPerPixel))
+
         # Fast jump table routine; faster and smaller than self-modifying code
         self.asm("lda %s_JMP+1,x" % (self.niceName))
         self.asm("pha")
@@ -252,11 +281,26 @@ class Sprite(Listing):
         self.out(rowStartCode)
         cycleCount += extraCycles
         
-        spriteChunks = self.generateBlitter(colorStreams, maskStreams, cycleCount)
+        spriteChunks, cycleCount, optimizationCount = self.generateBlitter(colorStreams, maskStreams, cycleCount)
         
         for row in range(self.height):
             for chunkIndex in range(len(spriteChunks)):
                 self.out(spriteChunks[chunkIndex][row])
+
+        if self.processor == "any":
+            self.out(".ifpC02")
+            self.restore_axy_65C02()
+            self.out(".else")
+            self.restore_axy_6502()
+            self.out(".endif")
+        elif self.processor == "65C02":
+            self.restore_axy_65C02()
+        elif self.processor == "6502":
+            self.restore_axy_6502()
+        else:
+            raise RuntimeError("Processor %s not supported" % self.processor)
+        self.asm("rts")
+        self.comment("Cycle count: %d, Optimized %d rows." % (cycleCount,optimizationCount))
 
     def generateBlitter(self, colorStreams, maskStreams, baseCycleCount):
         byteWidth = len(colorStreams[0])
@@ -305,11 +349,8 @@ class Sprite(Listing):
                 rowStartCode, extraCycles = self.rowStartCalculatorCode()
                 spriteChunks[chunkIndex][row] += "\tinx\n" + rowStartCode;
                 cycleCount += 2 + extraCycles
-            else:
-                spriteChunks[chunkIndex][row] += "\tRESTORE_AXY\n"
-                spriteChunks[chunkIndex][row] += "\trts\t;Cycle count: %d, Optimized %d rows." % (cycleCount,optimizationCount) + "\n"
                 
-        return spriteChunks
+        return spriteChunks, cycleCount, optimizationCount
 
     def rowStartCalculatorCode(self):
         return \

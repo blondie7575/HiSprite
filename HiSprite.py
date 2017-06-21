@@ -78,10 +78,27 @@ class Syntax(object):
     def origin(self, text):
         return self.asm("*= %s" % text)
 
+    def binary_constant(self, value):
+        try:
+            # already a string
+            _ = len(value)
+            return "#%%%s" % value
+        except TypeError:
+            return "#%s" % format(value, "08b")
+
 
 class Mac65(Syntax):
     def address(self, text):
         return self.asm(".word %s" % text)
+
+    def binary_constant(self, value):
+        # MAC/65 doesn't do binary constants
+        try:
+            # a string
+            value = int(value, 2)
+        except TypeError:
+            pass
+        return "#$%02x  ; %s" % (value, format(value, "08b"))
 
 
 class CC65(Syntax):
@@ -144,6 +161,9 @@ class Listing(object):
                 self.flush_stash()
         else:
             self.out(desired(text))
+
+    def binary_constant(self, value):
+        return self.assembler.binary_constant(value)
 
     def byte(self, text, per_line=1):
         self.stash(self.assembler.byte, text, per_line)
@@ -315,16 +335,18 @@ class Sprite(Listing):
                 if byteSplits[chunkIndex] != "00000000" and \
                     byteSplits[chunkIndex] != "10000000":
                 
+                    value = self.binary_constant(byteSplits[chunkIndex])
+
                     # Store byte into video memory
                     if self.xdraw:
                         spriteChunks[chunkIndex][row] = \
                         "\tlda (SCRATCH0),y\n" + \
-                        "\teor #%%%s\n" % byteSplits[chunkIndex] + \
+                        "\teor %s\n" % value + \
                         "\tsta (SCRATCH0),y\n";
                         cycleCount += 5 + 2 + 6
                     else:
                         spriteChunks[chunkIndex][row] = \
-                        "\tlda #%%%s\n" % byteSplits[chunkIndex] + \
+                        "\tlda %s\n" % value + \
                         "\tsta (SCRATCH0),y\n";
                         cycleCount += 2 + 6
                 else:

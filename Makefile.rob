@@ -1,0 +1,15 @@
+all: bwtest.dsk colortest.dsk
+
+bwtest.dsk:
+	python HiSprite.py -a mac65 -p 6502 -s hgrbw apple.png -t -c -r > apple.s
+	atasm -obwtest.xex bwtest.s -Lbwtest.var -gbwtest.lst
+	atrcopy bwtest.dsk boot -b bwtest.xex --brun 6000 -f
+
+colortest.dsk: colortest.s boxw_mix.png
+	python HiSprite.py -a mac65 -p 6502 -s hgrcolor boxw_mix.png -t -c -r > boxw_mix.s
+	atasm -ocolortest.xex colortest.s -Lcolortest.var -gcolortest.lst
+	atrcopy colortest.dsk boot -b colortest.xex --brun 6000 -f
+
+clean:
+	rm -f bwtest.dsk bwtest.xex bwtest.var bwtest.lst
+	rm -f colortest.dsk colortest.xex colortest.var colortest.lst

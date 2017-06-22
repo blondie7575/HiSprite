@@ -47,7 +47,7 @@ draw
     lda #100
     sta PARAM0 ; x coord
 
-    jsr APPLE
+    jsr BWSPRITE
 
 wait
     jmp wait
@@ -71,4 +71,4 @@ clr1
     bcc clr1
     rts
 
-    .include apple.s
+    .include bwsprite.s

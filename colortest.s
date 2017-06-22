@@ -47,7 +47,7 @@ draw
     lda #100
     sta PARAM0 ; x coord
 
-    jsr BOXW_MIX
+    jsr COLORSPRITE
 
 wait
     jmp wait
@@ -71,4 +71,4 @@ clr1
     bcc clr1
     rts
 
-    .include boxw_mix.s
+    .include colorsprite.s

@@ -167,7 +167,7 @@ class Listing(object):
 
 
 class Sprite(Listing):
-    def __init__(self, pngfile, assembler, screen, xdraw=False, processor="any"):
+    def __init__(self, pngfile, assembler, screen, xdraw=False, processor="any", name=""):
         Listing.__init__(self, assembler)
         self.screen = screen
 
@@ -176,7 +176,9 @@ class Sprite(Listing):
 
         self.xdraw = xdraw
         self.processor = processor
-        self.niceName = slugify(os.path.splitext(pngfile)[0])
+        if not name:
+            name = os.path.splitext(pngfile)[0]
+        self.niceName = slugify(name)
         self.width = pngdata[0]
         self.height = pngdata[1]
         self.pixelData = list(pngdata[2])
@@ -627,6 +629,7 @@ if __name__ == "__main__":
     parser.add_argument("-a", "--assembler", default="cc65", choices=["cc65","mac65"], help="Assembler syntax (default: %(default)s)")
     parser.add_argument("-p", "--processor", default="any", choices=["any","6502", "65C02"], help="Processor type (default: %(default)s)")
     parser.add_argument("-s", "--screen", default="hgrcolor", choices=["hgrcolor","hgrbw"], help="Screen format (default: %(default)s)")
+    parser.add_argument("-n", "--name", default="", help="Name for generated assembly function (default: based on image filename)")
     parser.add_argument("files", metavar="IMAGE", nargs="*", help="a PNG image [or a list of them]. PNG files must not have an alpha channel!")
     options, extra_args = parser.parse_known_args()
 
@@ -652,7 +655,7 @@ if __name__ == "__main__":
 
     for pngfile in options.files:
         try:
-            listings.append(Sprite(pngfile, assembler, screen, options.xdraw, options.processor))
+            listings.append(Sprite(pngfile, assembler, screen, options.xdraw, options.processor, options.name))
         except RuntimeError, e:
             print "%s: %s" % (pngfile, e)
             sys.exit(1)

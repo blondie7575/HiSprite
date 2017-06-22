@@ -172,10 +172,7 @@ class Sprite(Listing):
         self.screen = screen
 
         reader = png.Reader(pngfile)
-        try:
-            pngdata = reader.asRGB8()
-        except:
-            raise RuntimeError
+        pngdata = reader.asRGB8()
 
         self.xdraw = xdraw
         self.processor = processor
@@ -640,7 +637,7 @@ if __name__ == "__main__":
     else:
         print("Unknown assembler %s" % options.assembler)
         parser.print_help()
-        exit(1)
+        sys.exit(1)
 
     if options.screen.lower() == "hgrcolor":
         screen = HGR()
@@ -649,7 +646,7 @@ if __name__ == "__main__":
     else:
         print("Unknown screen format %s" % options.screen)
         parser.print_help()
-        exit(1)
+        sys.exit(1)
 
     listings = []
 
@@ -657,8 +654,11 @@ if __name__ == "__main__":
         try:
             listings.append(Sprite(pngfile, assembler, screen, options.xdraw, options.processor))
         except RuntimeError, e:
-            print e
-            parser.print_help()
+            print "%s: %s" % (pngfile, e)
+            sys.exit(1)
+        except png.Error, e:
+            print "%s: %s" % (pngfile, e)
+            sys.exit(1)
 
     if options.rows:
         listings.append(RowLookup(assembler, screen))

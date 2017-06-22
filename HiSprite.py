@@ -311,14 +311,15 @@ class Sprite(Listing):
         for row in range(self.height):
             
             byteSplits = colorStreams[row]
+            maskSplits = maskStreams[row]
             
             # Generate blitting code
             for chunkIndex in range(len(byteSplits)):
                 
                 # Optimization
-                if byteSplits[chunkIndex] != "00000000" and \
-                    byteSplits[chunkIndex] != "10000000":
-                
+                if maskSplits[chunkIndex] == "00000000":
+                    optimizationCount += 1
+                else:
                     value = self.binary_constant(byteSplits[chunkIndex])
 
                     # Store byte into video memory
@@ -333,8 +334,6 @@ class Sprite(Listing):
                         "\tlda %s\n" % value + \
                         "\tsta (SCRATCH0),y\n";
                         cycleCount += 2 + 6
-                else:
-                    optimizationCount += 1
                 
                 # Increment indices
                 if chunkIndex == len(byteSplits)-1:
@@ -429,7 +428,7 @@ class HGR(ScreenFormat):
     black,magenta,green,orange,blue,white,key = range(7)
 
     def bitsForColor(self, pixel):
-        if pixel == self.black:
+        if pixel == self.black or pixel == self.key:
             return "00"
         else:
             if pixel == self.white:
@@ -442,7 +441,7 @@ class HGR(ScreenFormat):
         return "10"
 
     def bitsForMask(self, pixel):
-        if pixel == self.black:
+        if pixel == self.key:
             return "00"
 
         return "11"
@@ -456,7 +455,7 @@ class HGR(ScreenFormat):
         return highBit
 
     def highBitForMask(self, pixel):
-        return "1"
+        return "0"
 
     def pixelColor(self, pixelData, row, col):
         r = pixelData[row][col*3]

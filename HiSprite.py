@@ -500,11 +500,18 @@ class HGR(ScreenFormat):
 
         for row in range(source.height):
             bitStream = ""
+            highBit = "0"
+            highBitFound = False
             
             # Compute raw bitstream for row from PNG pixels
             for pixelIndex in range(source.width):
                 pixel = self.pixelColor(source.pixelData,row,pixelIndex)
                 bitStream += bitDelegate(pixel)
+
+                # Determine palette bit from first non-black pixel on each row
+                if not highBitFound and pixel != self.black and pixel != self.key:
+                    highBit = highBitDelegate(pixel)
+                    highBitFound = True
             
             # Shift bit stream as needed
             bitStream = shiftStringRight(bitStream, shift, self.bitsPerPixel)
@@ -529,9 +536,6 @@ class HGR(ScreenFormat):
                         bitChunk = bitStream[bitPos:bitPos+7]
                 
                 bitChunk = bitChunk[::-1]
-                
-                # Determine palette bit from first pixel on each row
-                highBit = highBitDelegate(source.pixelData[row][0])
                 
                 byteSplits[byteIndex] = highBit + bitChunk
                 bitPos += 7

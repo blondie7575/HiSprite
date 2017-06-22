@@ -35,22 +35,55 @@ start
     jsr clrscr
 
     ldx #0
-loop
+?1
     txa
     sta $2000,x
     inx
-    bne loop
+    bne ?1
 
 draw
     lda #100
     sta PARAM1 ; y coord
-    lda #100
+    lda #0
     sta PARAM0 ; x coord
 
+loop
     jsr COLORSPRITE
 
+    jsr wait
+    inc PARAM0
+    lda PARAM0
+    cmp #100
+    bcc checky
+    lda #0
+    sta PARAM0
+
+checky
+    inc PARAM1
+    lda PARAM1
+    cmp #100
+    bcc loop
+    lda #0
+    sta PARAM1
+    beq loop
+
 wait
-    jmp wait
+    ldy     #$06    ; Loop a bit
+wait_outer
+    ldx     #$ff
+wait_inner
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    dex
+    bne     wait_inner
+    dey
+    bne     wait_outer
+    rts
 
 
 clrscr

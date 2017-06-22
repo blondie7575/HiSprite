@@ -1,4 +1,6 @@
-COLORSPRITE = apple.png
+COLORSPRITE = moldy_burger.png
+#COLORSPRITE = boxw_mag.png
+#COLORSPRITE = apple.png
 BWSPRITE = apple.png
 
 all: bwtest.dsk colortest.dsk
@@ -9,7 +11,7 @@ bwtest.dsk: HiSprite.py bwtest.s $(BWSPRITE)
 	atrcopy bwtest.dsk boot -b bwtest.xex --brun 6000 -f
 
 colortest.dsk: HiSprite.py colortest.s $(COLORSPRITE)
-	python HiSprite.py -a mac65 -p 6502 -s hgrcolor $(COLORSPRITE) -n colorsprite -t -c -r > colorsprite.s
+	python HiSprite.py -a mac65 -p 6502 -s hgrcolor $(COLORSPRITE) -n colorsprite -t -c -r -m > colorsprite.s
 	atasm -ocolortest.xex colortest.s -Lcolortest.var -gcolortest.lst
 	atrcopy colortest.dsk boot -b colortest.xex --brun 6000 -f
 

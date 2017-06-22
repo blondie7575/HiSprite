@@ -462,25 +462,29 @@ class HGR(ScreenFormat):
         r = pixelData[row][col*3]
         g = pixelData[row][col*3+1]
         b = pixelData[row][col*3+2]
-        color = self.black
-        
-        if r==255 and g==0 and b==255:
+
+        rhi = r == 255
+        rlo = r == 0
+        ghi = g == 255
+        glo = g == 0
+        bhi = b == 255
+        blo = b == 0
+
+        if rhi and ghi and bhi:
+            color = self.white
+        elif rlo and glo and blo:
+            color = self.black
+        elif rhi and bhi:
             color = self.magenta
+        elif rhi and g > 0:
+            color = self.orange
+        elif bhi:
+            color = self.blue
+        elif ghi:
+            color = self.green
         else:
-            if r==0 and g==255 and b==0:
-                color = self.green
-            else:
-                if r==0 and g==0 and b==255:
-                    color = self.blue
-                else:
-                    if r==255 and g>0 and b==0:
-                        color = self.orange
-                    else:
-                        if r==255 and g==255 and b==255:
-                            color = self.white
-                        else:
-                            if r==g and r==b and r!=0 and r!=255:   # Any gray is chroma key
-                                color = self.key
+            # anything else is chroma key
+            color = self.key
         return color
 
     def byteStreamsFromPixels(self, shift, source, mask=False):

@@ -167,7 +167,7 @@ class Listing(object):
 
 
 class Sprite(Listing):
-    def __init__(self, pngfile, assembler, screen, xdraw=False, processor="any", name=""):
+    def __init__(self, pngfile, assembler, screen, xdraw=False, use_mask=False, processor="any", name=""):
         Listing.__init__(self, assembler)
         self.screen = screen
 
@@ -175,6 +175,7 @@ class Sprite(Listing):
         pngdata = reader.asRGB8()
 
         self.xdraw = xdraw
+        self.use_mask = use_mask
         self.processor = processor
         if not name:
             name = os.path.splitext(pngfile)[0]
@@ -317,7 +318,7 @@ class Sprite(Listing):
             for chunkIndex in range(len(byteSplits)):
                 
                 # Optimization
-                if maskSplits[chunkIndex] == "00000000":
+                if maskSplits[chunkIndex] == "01111111":
                     optimizationCount += 1
                 else:
                     value = self.binary_constant(byteSplits[chunkIndex])
@@ -327,6 +328,14 @@ class Sprite(Listing):
                         spriteChunks[chunkIndex][row] = \
                         "\tlda (SCRATCH0),y\n" + \
                         "\teor %s\n" % value + \
+                        "\tsta (SCRATCH0),y\n";
+                        cycleCount += 5 + 2 + 6
+                    elif self.use_mask:
+                        mask = self.binary_constant(maskSplits[chunkIndex])
+                        spriteChunks[chunkIndex][row] = \
+                        "\tlda (SCRATCH0),y\n" + \
+                        "\tand %s\n" % mask + \
+                        "\tora %s\n" % value + \
                         "\tsta (SCRATCH0),y\n";
                         cycleCount += 5 + 2 + 6
                     else:
@@ -361,15 +370,7 @@ class Sprite(Listing):
         "\ttay\n", 4 + 3 + 4 + 3 + 3 + 4 + 2;
 
 
-def fillOutByte(numBits):
-    filler = ""
-    for bit in range(numBits):
-        filler += "0"
-    
-    return filler
-
-
-def shiftStringRight(string, shift, bitsPerPixel):
+def shiftStringRight(string, shift, bitsPerPixel, fillerBit):
     if shift==0:
         return string
     
@@ -377,7 +378,7 @@ def shiftStringRight(string, shift, bitsPerPixel):
     result = ""
     
     for i in range(shift):
-        result += "0"
+        result += fillerBit
         
     result += string
     return result
@@ -442,9 +443,9 @@ class HGR(ScreenFormat):
 
     def bitsForMask(self, pixel):
         if pixel == self.key:
-            return "00"
+            return "11"
 
-        return "11"
+        return "00"
 
     def highBitForColor(self, pixel):
         # Note that we prefer high-bit white because blue fringe is less noticeable than magenta.
@@ -493,9 +494,11 @@ class HGR(ScreenFormat):
         if mask:
             bitDelegate = self.bitsForMask
             highBitDelegate = self.highBitForMask
+            fillerBit = "1"
         else:
             bitDelegate = self.bitsForColor
             highBitDelegate = self.highBitForColor
+            fillerBit = "0"
 
         for row in range(source.height):
             bitStream = ""
@@ -513,7 +516,7 @@ class HGR(ScreenFormat):
                     highBitFound = True
             
             # Shift bit stream as needed
-            bitStream = shiftStringRight(bitStream, shift, self.bitsPerPixel)
+            bitStream = shiftStringRight(bitStream, shift, self.bitsPerPixel, fillerBit)
             bitStream = bitStream[:byteWidth*8]
             
             # Split bitstream into bytes
@@ -526,11 +529,11 @@ class HGR(ScreenFormat):
                 bitChunk = ""
                 
                 if remainingBits < 0:
-                    bitChunk = "0000000"
+                    bitChunk = fillerBit * 7
                 else:   
                     if remainingBits < 7:
                         bitChunk = bitStream[bitPos:]
-                        bitChunk += fillOutByte(7-remainingBits)
+                        bitChunk += fillerBit * (7-remainingBits)
                     else:   
                         bitChunk = bitStream[bitPos:bitPos+7]
                 
@@ -633,6 +636,7 @@ if __name__ == "__main__":
     parser.add_argument("-c", "--cols", action="store_true", default=False, help="output column (x position) lookup tables")
     parser.add_argument("-r", "--rows", action="store_true", default=False, help="output row (y position) lookup tables")
     parser.add_argument("-x", "--xdraw", action="store_true", default=False, help="use XOR for sprite drawing")
+    parser.add_argument("-m", "--mask", action="store_true", default=False, help="use mask for sprite drawing")
     parser.add_argument("-a", "--assembler", default="cc65", choices=["cc65","mac65"], help="Assembler syntax (default: %(default)s)")
     parser.add_argument("-p", "--processor", default="any", choices=["any","6502", "65C02"], help="Processor type (default: %(default)s)")
     parser.add_argument("-s", "--screen", default="hgrcolor", choices=["hgrcolor","hgrbw"], help="Screen format (default: %(default)s)")
@@ -662,7 +666,7 @@ if __name__ == "__main__":
 
     for pngfile in options.files:
         try:
-            listings.append(Sprite(pngfile, assembler, screen, options.xdraw, options.processor, options.name))
+            listings.append(Sprite(pngfile, assembler, screen, options.xdraw, options.mask, options.processor, options.name))
         except RuntimeError, e:
             print "%s: %s" % (pngfile, e)
             sys.exit(1)

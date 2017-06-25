@@ -72,3 +72,5 @@ clr1
     rts
 
     .include bwsprite.s
+    .include rowlookup.s
+    .include collookupbw.s

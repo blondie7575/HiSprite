@@ -1,19 +1,36 @@
 COLORSPRITE = moldy_burger.png
 #COLORSPRITE = boxw_mag.png
 #COLORSPRITE = apple.png
-BWSPRITE = apple.png
+BWSPRITE = apple-sprite9x11.png
 
-all: bwtest.dsk colortest.dsk
+all: multitest.dsk
 
-bwtest.dsk: HiSprite.py bwtest.s $(BWSPRITE)
-	python HiSprite.py -a mac65 -p 6502 -s hgrbw $(BWSPRITE) -n bwsprite -t -c -r > bwsprite.s
+rowlookup.s: HiSprite.py
+	python HiSprite.py -a mac65 -p 6502 -r > rowlookup.s
+
+colbw.s: HiSprite.py
+	python HiSprite.py -a mac65 -p 6502 -s hgrbw -c > collookupbw.s
+
+collookupcolor.s: HiSprite.py
+	python HiSprite.py -a mac65 -p 6502 -c > collookupcolor.s
+
+bwsprite.s: HiSprite.py colbw.s rowlookup.s $(BWSPRITE)
+	python HiSprite.py -a mac65 -p 6502 -s hgrbw $(BWSPRITE) -n bwsprite -m > bwsprite.s
+
+colorsprite.s: HiSprite.py collookupcolor.s rowlookup.s $(COLORSPRITE)
+	python HiSprite.py -a mac65 -p 6502 -s hgrcolor $(COLORSPRITE) -n colorsprite -m > colorsprite.s
+
+bwtest.dsk: HiSprite.py bwtest.s bwsprite.s
 	atasm -obwtest.xex bwtest.s -Lbwtest.var -gbwtest.lst
 	atrcopy bwtest.dsk boot -b bwtest.xex --brun 6000 -f
 
-colortest.dsk: HiSprite.py colortest.s $(COLORSPRITE)
-	python HiSprite.py -a mac65 -p 6502 -s hgrcolor $(COLORSPRITE) -n colorsprite -t -c -r -m > colorsprite.s
+colortest.dsk: HiSprite.py colortest.s bwsprite.s
 	atasm -ocolortest.xex colortest.s -Lcolortest.var -gcolortest.lst
 	atrcopy colortest.dsk boot -b colortest.xex --brun 6000 -f
+
+multitest.dsk: HiSprite.py multitest.s colorsprite.s bwsprite.s
+	atasm -omultitest.xex multitest.s -Lmultitest.var -gmultitest.lst
+	atrcopy multitest.dsk boot -b multitest.xex --brun 6000 -f
 
 clean:
 	rm -f bwtest.dsk bwtest.xex bwtest.var bwtest.lst

@@ -622,7 +622,9 @@ class ColLookup(Listing):
         self.out("\n")
         self.label("MOD%d_%d" % (screen.numShifts, screen.bitsPerPixel))
         for pixel in range(screen.numX):
-            self.byte("$%02x" % ((pixel % screen.numShifts) * screen.bitsPerPixel), screen.numShifts)
+            # This is the index into the jump table, so it's always multiplied
+            # by 2
+            self.byte("$%02x" % ((pixel % screen.numShifts) * 2), screen.numShifts)
 
 
 if __name__ == "__main__":

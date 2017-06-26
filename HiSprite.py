@@ -80,7 +80,7 @@ class AssemblerSyntax(object):
             _ = len(value)
             return "#%%%s" % value
         except TypeError:
-            return "#%s" % format(value, "08b")
+            return "#%%%s" % format(value, "08b")
 
 
 class Mac65(AssemblerSyntax):
@@ -88,13 +88,12 @@ class Mac65(AssemblerSyntax):
         return self.asm(".word %s" % text)
 
     def binary_constant(self, value):
-        # MAC/65 doesn't do binary constants
         try:
             # a string
             value = int(value, 2)
         except TypeError:
             pass
-        return "#$%02x  ; %s" % (value, format(value, "08b"))
+        return "#~%s" % format(value, "08b")
 
 
 class CC65(AssemblerSyntax):

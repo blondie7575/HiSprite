@@ -270,10 +270,10 @@ class Sprite(Listing):
         self.label("%s_SHIFT%d" % (self.niceName,shift))
 
         colorStreams = self.screen.byteStreamsFromPixels(shift, self)
-        for c in colorStreams:
-            self.comment_line(str(c))
-        self.out("")
         maskStreams = self.screen.byteStreamsFromPixels(shift, self, True)
+        for c, m in zip(colorStreams, maskStreams):
+            self.comment_line(str(c) + "  " + str(m))
+        self.out("")
 
         self.asm("ldx PARAM1")
         cycleCount += 3
@@ -569,8 +569,8 @@ class HGRBW(HGR):
 
     def bitsForMask(self, pixel):
         if pixel == self.key:
-            return "0"
-        return "1"
+            return "1"
+        return "0"
 
     def pixelColor(self, pixelData, row, col):
         r = pixelData[row][col*3]

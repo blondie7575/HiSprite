@@ -8,13 +8,13 @@ all: multitest.dsk
 rowlookup.s: HiSprite.py
 	python HiSprite.py -a mac65 -p 6502 -r > rowlookup.s
 
-colbw.s: HiSprite.py
+collookupbw.s: HiSprite.py
 	python HiSprite.py -a mac65 -p 6502 -s hgrbw -c > collookupbw.s
 
 collookupcolor.s: HiSprite.py
 	python HiSprite.py -a mac65 -p 6502 -c > collookupcolor.s
 
-bwsprite.s: HiSprite.py colbw.s rowlookup.s $(BWSPRITE)
+bwsprite.s: HiSprite.py collookupbw.s rowlookup.s $(BWSPRITE)
 	python HiSprite.py -a mac65 -p 6502 -s hgrbw $(BWSPRITE) -n bwsprite -m > bwsprite.s
 
 colorsprite.s: HiSprite.py collookupcolor.s rowlookup.s $(COLORSPRITE)
@@ -33,5 +33,7 @@ multitest.dsk: HiSprite.py multitest.s colorsprite.s bwsprite.s
 	atrcopy multitest.dsk boot -b multitest.xex --brun 6000 -f
 
 clean:
+	rm -f rowlookup.s collookupbw.s collookupcolor.s
 	rm -f bwtest.dsk bwtest.xex bwtest.var bwtest.lst
 	rm -f colortest.dsk colortest.xex colortest.var colortest.lst
+	rm -f multitest.dsk multitest.xex multitest.var multitest.lst

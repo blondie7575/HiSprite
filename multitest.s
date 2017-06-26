@@ -22,8 +22,9 @@ SCRATCH1        = $1a
 SPRITEPTR_L     = $1b
 SPRITEPTR_H     = $1c
 
-    *= $80
-drawptr .ds 2
+; constants
+MAXPOSX                 = 127   ; This demo doesn't wanna do 16 bit math
+MAXPOSY                 = 127
 
 
     *= $6000
@@ -34,128 +35,109 @@ start
     bit TXTPAGE1
     bit SETHIRES
 
+    ;jsr clrscr
+    jsr initsprites
+
 gameloop
-    jmp draw
+    jsr renderstart
+    jsr movestart
+    jsr wait
+    jsr erasestart
+    jmp gameloop
 
-    jsr clrscr
 
-    ldx #0
-?1
-    txa
-    sta $2000,x
-    inx
-    bne ?1
+initsprites
+    nop
+    rts
+
 
 ; Draw sprites by looping through the list of sprites
-renderinit
-    lda #<drawlist
-    sta drawptr
-    lda #>drawlist
-    sta drawptr+1
+renderstart
     ldy #0
 
 renderloop
-    lda (drawptr),y
+    lda sprite_active,y
+    bmi renderend       ; end of list if negative
+    beq renderskip      ; skip if zero
+    lda sprite_l,y
     sta jsrsprite+1
-    iny
-    lda (drawptr),y
-    beq renderend       ; check high byte is 0 ==> end of list
+    lda sprite_h,y
     sta jsrsprite+2
-    iny
-    lda (drawptr),y     ; x coord
+    lda sprite_x,y
     sta PARAM0
-    iny
-    lda (drawptr),y     ; y coord
+    lda sprite_y,y
     sta PARAM1
 
 jsrsprite
-    jsr $ffff
-
-    ; skip y coords
+    jsr $ffff           ; wish you could JSR ($nnnn)
+renderskip
     iny
-    iny
-    bne renderLoop
+    bne renderloop      ; branch always because always positive; otherwise limited to 255 sprites (haha)
 
-    jsr wait
-    inc PARAM0
-    lda PARAM0
-    cmp #100
-    bcc checky
-    lda #0
-    sta PARAM0
+renderend
+    rts
 
-movementLoop:
-    ; Find our sprite pointer
-    lda spriteNum
-    asl
-    tax
-    lda META_BUFFERS+1,x
-    sta SPRITEPTR_H
-    lda META_BUFFERS,x
-    sta SPRITEPTR_L
 
+movestart
+    ldy #0
+
+moveloop
+    lda sprite_active,y
+    bmi moveend
+    beq movenext
+
+movex
     ; Apply X velocity to X coordinate
     clc
-    ldy #0
-    lda (SPRITEPTR_L),y
-    ldy #2
-    adc (SPRITEPTR_L),y
+    lda sprite_x,y
+    adc sprite_dx,y
     bmi flipX
     cmp #MAXPOSX
     bpl flipX
 
     ; Store the new X
-    ldy #0
-    sta (SPRITEPTR_L),y
+    sta sprite_x,y
 
-adjustY:
+movey
     ; Apply Y velocity to Y coordinate
     clc
-    ldy #1
-    lda (SPRITEPTR_L),y
-    ldy #3
-    adc (SPRITEPTR_L),y
+    lda sprite_y,y
+    adc sprite_dy,y
     bmi flipY
     cmp #MAXPOSY
     bpl flipY
 
     ; Store the new Y
-    ldy #1
-    sta (SPRITEPTR_L),y
+    sta sprite_y,y
 
-continueMovementList:
-    dec spriteNum
-    bmi movementRestartList
-    jmp movementLoop
+movenext
+    iny
+    bne moveloop
 
-flipX:
-    lda (SPRITEPTR_L),y
+moveend
+    rts
+
+
+flipX
+    lda sprite_dx,y
     eor #$ff
-    inc
-    sta (SPRITEPTR_L),y
-    bra adjustY
+    clc
+    adc #1
+    sta sprite_dx,y
+    jmp movey
 
-flipY:
-    lda (SPRITEPTR_L),y
+flipY
+    lda sprite_dy,y
     eor #$ff
-    inc
-    sta (SPRITEPTR_L),y
-    bra continueMovementList
-
-movementRestartList:
-    lda #MAXSPRITEINDEX
-    sta spriteNum
-    jmp renderLoop
+    clc
+    adc #1
+    sta sprite_dy,y
+    jmp moveloop
 
 
-checky
-    inc PARAM1
-    lda PARAM1
-    cmp #100
-    bcc loop
-    lda #0
-    sta PARAM1
-    beq loop
+erasestart
+    rts
+
 
 wait
     ldy     #$06    ; Loop a bit
@@ -194,26 +176,26 @@ clr1
     bcc clr1
     rts
 
+sprite_active
+    .byte 1, 1, 0, $ff  ; 1 = active, 0 = skip, $ff = end of list
 
-drawlist
-    .word SPRITE1
-    .word SPRITE2
-    .word 0
+sprite_l
+    .byte <COLORSPRITE, <BWSPRITE, 0, 0
 
+sprite_h
+    .byte >COLORSPRITE, >BWSPRITE, 0, 0
 
-SPRITE1
-    .word COLORSPRITE
-    .byte 80    ; X pos
-    .byte 116   ; Y pos
-    .byte -1        ; X vec
-    .byte -3        ; Y vec
+sprite_x
+    .byte 80, 64, 0, 0
 
-SPRITE2
-    .word BWSPRITE
-    .byte 64    ; X pos
-    .byte 126   ; Y pos
-    .byte 4 ; X vec
-    .byte 3 ; Y vec
+sprite_y
+    .byte 116, 126, 0, 0
+
+sprite_dx
+    .byte -1, 4, 0, 0
+
+sprite_dy
+    .byte -3, 1, 0, 0
 
 
     .include colorsprite.s

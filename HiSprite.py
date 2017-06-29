@@ -166,7 +166,7 @@ class Listing(object):
 
 
 class Sprite(Listing):
-    def __init__(self, pngfile, assembler, screen, xdraw=False, use_mask=False, processor="any", name=""):
+    def __init__(self, pngfile, assembler, screen, xdraw=False, use_mask=False, backing_store=False, processor="any", name=""):
         Listing.__init__(self, assembler)
         self.screen = screen
 
@@ -175,6 +175,7 @@ class Sprite(Listing):
 
         self.xdraw = xdraw
         self.use_mask = use_mask
+        self.backing_store = backing_store
         self.processor = processor
         if not name:
             name = os.path.splitext(pngfile)[0]
@@ -274,6 +275,10 @@ class Sprite(Listing):
             self.comment_line(str(c) + "  " + str(m))
         self.out("")
 
+        if self.backing_store:
+            byteWidth = len(colorStreams[0])
+            self.asm("jsr savebg_%dx%d" % (byteWidth, self.height))
+
         self.asm("ldx PARAM1")
         cycleCount += 3
         rowStartCode,extraCycles = self.rowStartCalculatorCode();
@@ -317,7 +322,7 @@ class Sprite(Listing):
             for chunkIndex in range(len(byteSplits)):
                 
                 # Optimization
-                if maskSplits[chunkIndex] == "01111111":
+                if maskSplits[chunkIndex] == "01111111" and not self.backing_store:
                     optimizationCount += 1
                 else:
                     value = self.binary_constant(byteSplits[chunkIndex])
@@ -638,6 +643,7 @@ if __name__ == "__main__":
     parser.add_argument("-r", "--rows", action="store_true", default=False, help="output row (y position) lookup tables")
     parser.add_argument("-x", "--xdraw", action="store_true", default=False, help="use XOR for sprite drawing")
     parser.add_argument("-m", "--mask", action="store_true", default=False, help="use mask for sprite drawing")
+    parser.add_argument("-b", "--backing-store", action="store_true", default=False, help="add code to store background")
     parser.add_argument("-a", "--assembler", default="cc65", choices=["cc65","mac65"], help="Assembler syntax (default: %(default)s)")
     parser.add_argument("-p", "--processor", default="any", choices=["any","6502", "65C02"], help="Processor type (default: %(default)s)")
     parser.add_argument("-s", "--screen", default="hgrcolor", choices=["hgrcolor","hgrbw"], help="Screen format (default: %(default)s)")
@@ -667,7 +673,7 @@ if __name__ == "__main__":
 
     for pngfile in options.files:
         try:
-            listings.append(Sprite(pngfile, assembler, screen, options.xdraw, options.mask, options.processor, options.name))
+            listings.append(Sprite(pngfile, assembler, screen, options.xdraw, options.mask, options.backing_store, options.processor, options.name))
         except RuntimeError, e:
             print "%s: %s" % (pngfile, e)
             sys.exit(1)

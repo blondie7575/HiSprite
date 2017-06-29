@@ -22,6 +22,10 @@ SCRATCH1        = $1a
 SPRITEPTR_L     = $1b
 SPRITEPTR_H     = $1c
 
+BGTOP = $c0       ; page number of first byte beyond top of backing store stack
+bgstore = $80
+bgline = $82
+
 ; constants
 MAXPOSX                 = 127   ; This demo doesn't wanna do 16 bit math
 MAXPOSY                 = 127
@@ -42,12 +46,12 @@ gameloop
     jsr renderstart
     jsr movestart
     jsr wait
-    jsr erasestart
+    jsr restorebg_driver
     jmp gameloop
 
 
 initsprites
-    nop
+    jsr restorebg_init
     rts
 
 
@@ -132,11 +136,8 @@ flipY
     clc
     adc #1
     sta sprite_dy,y
-    jmp moveloop
+    jmp movenext
 
-
-erasestart
-    rts
 
 
 wait
@@ -176,26 +177,32 @@ clr1
     bcc clr1
     rts
 
+; Sprite data is interleaved so a simple indexed mode can be used. This is not
+; convenient to set up but makes faster accessing because you don't have to 
+; increment the index register. For example, all the info about sprite #2 can
+; be indexed using Y = 2 on the indexed operators, e.g. "lda sprite_active,y",
+; "lda sprite_x,y", etc.
+
 sprite_active
-    .byte 1, 1, 0, $ff  ; 1 = active, 0 = skip, $ff = end of list
+    .byte 1, 1, 1, 1, 1, 1, 1, 1, $ff  ; 1 = active, 0 = skip, $ff = end of list
 
 sprite_l
-    .byte <COLORSPRITE, <BWSPRITE, 0, 0
+    .byte <BWSPRITE, <BWSPRITE, <BWSPRITE, <BWSPRITE, <BWSPRITE, <BWSPRITE, <BWSPRITE, <BWSPRITE
 
 sprite_h
-    .byte >COLORSPRITE, >BWSPRITE, 0, 0
+    .byte >BWSPRITE, >BWSPRITE, >BWSPRITE, >BWSPRITE, >BWSPRITE, >BWSPRITE, >BWSPRITE, >BWSPRITE
 
 sprite_x
-    .byte 80, 64, 0, 0
+    .byte 80, 64, 33, 83, 4, 9, 55, 18
 
 sprite_y
-    .byte 116, 126, 0, 0
+    .byte 116, 126, 40, 60, 80, 100, 120, 140
 
 sprite_dx
-    .byte -1, 4, 0, 0
+    .byte -1, -2, -3, -4, 1, 2, 3, 4
 
 sprite_dy
-    .byte -3, 1, 0, 0
+    .byte -4, -3, -2, -1, 4, 3, 2, 1
 
 
     .include colorsprite.s
@@ -203,3 +210,5 @@ sprite_dy
     .include rowlookup.s
     .include collookupbw.s
     .include collookupcolor.s
+    .include backingstore.s
+    .include backingstore-3x11.s

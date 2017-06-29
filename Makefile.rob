@@ -15,7 +15,7 @@ collookupcolor.s: HiSprite.py
 	python HiSprite.py -a mac65 -p 6502 -c > collookupcolor.s
 
 bwsprite.s: HiSprite.py collookupbw.s rowlookup.s $(BWSPRITE)
-	python HiSprite.py -a mac65 -p 6502 -s hgrbw $(BWSPRITE) -n bwsprite -m > bwsprite.s
+	python HiSprite.py -a mac65 -p 6502 -s hgrbw $(BWSPRITE) -n bwsprite -m -b > bwsprite.s
 
 colorsprite.s: HiSprite.py collookupcolor.s rowlookup.s $(COLORSPRITE)
 	python HiSprite.py -a mac65 -p 6502 -s hgrcolor $(COLORSPRITE) -n colorsprite -m > colorsprite.s

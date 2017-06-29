@@ -27,8 +27,8 @@ bgstore = $80
 bgline = $82
 
 ; constants
-MAXPOSX                 = 127   ; This demo doesn't wanna do 16 bit math
-MAXPOSY                 = 127
+MAXPOSX                 = 250
+MAXPOSY                 = 192 - 16
 
 
     *= $6000
@@ -92,26 +92,60 @@ moveloop
 
 movex
     ; Apply X velocity to X coordinate
+    lda sprite_dirx,y
+    bpl move_right
+    sec
+    lda sprite_x,y
+    sbc sprite_dx,y
+    cmp #MAXPOSX
+    bcc movex_end
+    lda #1
+    sta sprite_dirx,y
+    lda #0
+    sta sprite_x,y
+    bpl movey
+
+move_right
     clc
     lda sprite_x,y
     adc sprite_dx,y
-    bmi flipX
     cmp #MAXPOSX
-    bpl flipX
+    bcc movex_end
+    lda #-1
+    sta sprite_dirx,y
+    lda #MAXPOSX
 
+movex_end
     ; Store the new X
     sta sprite_x,y
 
 movey
     ; Apply Y velocity to Y coordinate
+    lda sprite_diry,y
+    bpl move_down
+    sec
+    lda sprite_y,y
+    sbc sprite_dy,y
+    cmp #MAXPOSY        ; checking wraparound
+    bcc movey_end       ; less than => not wrapped
+    lda #1
+    sta sprite_diry,y
+    lda #0
+    sta sprite_y,y
+    bpl movenext
+
+move_down
     clc
     lda sprite_y,y
     adc sprite_dy,y
-    bmi flipY
     cmp #MAXPOSY
-    bpl flipY
+    bcc movey_end
+    lda #-1
+    sta sprite_diry,y
+    lda #MAXPOSY
 
-    ; Store the new Y
+movey_end
+    ; Store the new X
     sta sprite_y,y
 
 movenext
@@ -120,23 +154,6 @@ movenext
 
 moveend
     rts
-
-
-flipX
-    lda sprite_dx,y
-    eor #$ff
-    clc
-    adc #1
-    sta sprite_dx,y
-    jmp movey
-
-flipY
-    lda sprite_dy,y
-    eor #$ff
-    clc
-    adc #1
-    sta sprite_dy,y
-    jmp movenext
 
 
 
@@ -193,16 +210,23 @@ sprite_h
     .byte >BWSPRITE, >BWSPRITE, >BWSPRITE, >BWSPRITE, >BWSPRITE, >BWSPRITE, >BWSPRITE, >BWSPRITE
 
 sprite_x
-    .byte 80, 64, 33, 83, 4, 9, 55, 18
+    .byte 80, 164, 33, 245, 4, 9, 255, 18
 
 sprite_y
     .byte 116, 126, 40, 60, 80, 100, 120, 140
 
 sprite_dx
-    .byte -1, -2, -3, -4, 1, 2, 3, 4
+    .byte 1, 2, 3, 4, 1, 2, 3, 4
+
+sprite_dirx
+    .byte -1, -1, -1, -1, 1, 1, 1, 1
 
 sprite_dy
-    .byte -4, -3, -2, -1, 4, 3, 2, 1
+    .byte 4, 3, 2, 1, 4, 3, 2, 1
+
+sprite_diry
+    .byte 1, 1, 1, 1, -1, -1, -1, -1
+
 
 
     .include colorsprite.s

@@ -21,6 +21,7 @@ SCRATCH0        = $19
 SCRATCH1        = $1a
 SPRITEPTR_L     = $1b
 SPRITEPTR_H     = $1c
+RENDERCOUNT     = $ce
 BGSTORE = $fa
 
 BGTOP = $c0       ; page number of first byte beyond top of backing store stack
@@ -62,13 +63,19 @@ initsprites
 
 ; Draw sprites by looping through the list of sprites
 renderstart
+    lda #sprite_l - sprite_active
+    sta RENDERCOUNT
+    inc renderroundrobin+1
+
+renderroundrobin
     ldy #0
     sty PARAM3
 
 renderloop
-    ldy PARAM3
+    lda PARAM3
+    and #sprite_l - sprite_active - 1
+    tay
     lda sprite_active,y
-    bmi renderend       ; end of list if negative
     beq renderskip      ; skip if zero
     lda sprite_l,y
     sta jsrsprite+1
@@ -83,13 +90,16 @@ jsrsprite
     jsr $ffff           ; wish you could JSR ($nnnn)
 renderskip
     inc PARAM3
-    bne renderloop      ; branch always because always positive; otherwise limited to 255 sprites (haha)
+    dec RENDERCOUNT
+    bne renderloop
 
 renderend
     rts
 
 
 movestart
+    lda #sprite_l - sprite_active
+    sta RENDERCOUNT
     ldy #0
 
 moveloop
@@ -157,6 +167,7 @@ movey_end
 
 movenext
     iny
+    dec RENDERCOUNT
     bne moveloop
 
 moveend
@@ -206,9 +217,11 @@ clr1
 ; increment the index register. For example, all the info about sprite #2 can
 ; be indexed using Y = 2 on the indexed operators, e.g. "lda sprite_active,y",
 ; "lda sprite_x,y", etc.
+;
+; Number of sprites must be a power of 2
 
 sprite_active
-    .byte 1, 1, 1, 1, 1, 1, 1, 1, $ff  ; 1 = active, 0 = skip, $ff = end of list
+    .byte 1, 1, 1, 1, 1, 1, 1, 1  ; 1 = active, 0 = skip
 
 sprite_l
     .byte <APPLE_SPRITE9X11, <APPLE_SPRITE9X11, <APPLE_SPRITE9X11, <APPLE_SPRITE9X11, <APPLE_SPRITE9X11, <APPLE_SPRITE9X11, <MOLDY_BURGER, <MOLDY_BURGER

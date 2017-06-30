@@ -44,9 +44,15 @@ start
 gameloop
     jsr renderstart
     jsr movestart
+    dec fasttoggle
+    bpl gofast
     jsr wait
+gofast
     jsr restorebg_driver
     jmp gameloop
+
+fasttoggle
+    .byte 0
 
 
 initsprites

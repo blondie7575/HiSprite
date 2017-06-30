@@ -410,10 +410,16 @@ class Sprite(Listing):
         self.asm("sta SCRATCH1")
         self.asm("lda HGRROWS_L,x")
         self.asm("sta SCRATCH0")
-        self.asm("ldy PARAM0")
-        self.asm("lda DIV%d_%d,y" % (self.screen.numShifts, self.screen.bitsPerPixel))
-        self.asm("tay")
-        return cycles + 4 + 3 + 4 + 3 + 3 + 4 + 2;
+        if row == 0:
+            self.asm("ldy PARAM0")
+            self.asm("lda DIV%d_%d,y" % (self.screen.numShifts, self.screen.bitsPerPixel))
+            self.asm("sta PARAM2")  # save the mod lookup; it doesn't change
+            self.asm("tay")
+            cycles += 3 + 4 + 3 + 2
+        else:
+            self.asm("ldy PARAM2")
+            cycles += 2
+        return cycles + 4 + 3 + 4 + 3;
 
 
 def shiftStringRight(string, shift, bitsPerPixel, fillerBit):

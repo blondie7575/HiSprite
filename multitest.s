@@ -21,10 +21,9 @@ SCRATCH0        = $19
 SCRATCH1        = $1a
 SPRITEPTR_L     = $1b
 SPRITEPTR_H     = $1c
+BGSTORE = $fa
 
 BGTOP = $c0       ; page number of first byte beyond top of backing store stack
-bgstore = $80
-bgline = $82
 
 ; constants
 MAXPOSX                 = 250
@@ -204,10 +203,10 @@ sprite_active
     .byte 1, 1, 1, 1, 1, 1, 1, 1, $ff  ; 1 = active, 0 = skip, $ff = end of list
 
 sprite_l
-    .byte <BWSPRITE, <BWSPRITE, <BWSPRITE, <BWSPRITE, <BWSPRITE, <BWSPRITE, <BWSPRITE, <BWSPRITE
+    .byte <APPLE_SPRITE9X11, <APPLE_SPRITE9X11, <APPLE_SPRITE9X11, <APPLE_SPRITE9X11, <APPLE_SPRITE9X11, <APPLE_SPRITE9X11, <MOLDY_BURGER, <MOLDY_BURGER
 
 sprite_h
-    .byte >BWSPRITE, >BWSPRITE, >BWSPRITE, >BWSPRITE, >BWSPRITE, >BWSPRITE, >BWSPRITE, >BWSPRITE
+    .byte >APPLE_SPRITE9X11, >APPLE_SPRITE9X11, >APPLE_SPRITE9X11, >APPLE_SPRITE9X11, >APPLE_SPRITE9X11, >APPLE_SPRITE9X11, >MOLDY_BURGER, >MOLDY_BURGER
 
 sprite_x
     .byte 80, 164, 33, 245, 4, 9, 255, 18
@@ -229,10 +228,6 @@ sprite_diry
 
 
 
-    .include colorsprite.s
-    .include bwsprite.s
-    .include rowlookup.s
-    .include collookupbw.s
-    .include collookupcolor.s
-    .include backingstore.s
-    .include backingstore-3x11.s
+.include multitest-sprite-driver.s
+.include backingstore.s
+.include backingstore-3x11.s

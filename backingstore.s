@@ -48,8 +48,8 @@ restorebg_jsr
     jsr $ffff
 
     clc
-    lda bgstore
-    adc #SIZE_3X11
+    tya         ; y contains the number of bytes processed
+    adc bgstore
     sta bgstore
     lda bgstore+1
     adc #0

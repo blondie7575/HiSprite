@@ -53,6 +53,8 @@ def slugify(s):
 
 
 class AssemblerSyntax(object):
+    extension = "s"
+
     def asm(self, text):
         return "\t%s" % text
 
@@ -73,6 +75,9 @@ class AssemblerSyntax(object):
 
     def origin(self, text):
         return self.asm("*= %s" % text)
+
+    def include(self, text):
+        return self.asm(".include \"%s\"" % text)
 
     def binary_constant(self, value):
         try:
@@ -97,6 +102,8 @@ class Mac65(AssemblerSyntax):
 
 
 class CC65(AssemblerSyntax):
+    extension = "s"
+
     def label(self, text):
         return "%s:" % text
 
@@ -108,10 +115,22 @@ class Listing(object):
         self.current = None
         self.desired_count = 1
         self.stash_list = []
+        self.slug = "sprite-driver"
 
     def __str__(self):
         self.flush_stash()
         return "\n".join(self.lines) + "\n"
+
+    def get_filename(self, basename):
+        return "%s-%s.%s" % (basename, self.slug.lower(), self.assembler.extension)
+
+    def write(self, basename, disclaimer):
+        filename = self.get_filename(basename)
+        print("Writing to %s" % filename)
+        with open(filename, "w") as fh:
+            fh.write(disclaimer + "\n\n")
+            fh.write(str(self))
+        return filename
 
     def out(self, line):
         self.flush_stash()
@@ -134,6 +153,9 @@ class Listing(object):
 
     def addr(self, text):
         self.out(self.assembler.address(text))
+
+    def include(self, text):
+        self.out(self.assembler.include(text))
 
     def flush_stash(self):
         if self.current is not None and len(self.stash_list) > 0:
@@ -166,6 +188,8 @@ class Listing(object):
 
 
 class Sprite(Listing):
+    backing_store_sizes = set()
+
     def __init__(self, pngfile, assembler, screen, xdraw=False, use_mask=False, backing_store=False, processor="any", name=""):
         Listing.__init__(self, assembler)
         self.screen = screen
@@ -179,7 +203,7 @@ class Sprite(Listing):
         self.processor = processor
         if not name:
             name = os.path.splitext(pngfile)[0]
-        self.niceName = slugify(name)
+        self.slug = slugify(name)
         self.width = pngdata[0]
         self.height = pngdata[1]
         self.pixelData = list(pngdata[2])
@@ -189,7 +213,7 @@ class Sprite(Listing):
 
     def jumpTable(self):
         # Prologue
-        self.label("%s" % self.niceName)
+        self.label("%s" % self.slug)
         self.comment("%d bytes per row" % self.screen.byteWidth(self.width))
 
         if self.processor == "any":
@@ -234,13 +258,13 @@ class Sprite(Listing):
         self.asm("ldy PARAM0")
         self.asm("ldx MOD%d_%d,y" % (self.screen.numShifts, self.screen.bitsPerPixel))
 
-        self.asm("jmp (%s_JMP,x)\n" % (self.niceName))
+        self.asm("jmp (%s_JMP,x)\n" % (self.slug))
         offset_suffix = ""
         
         # Bit-shift jump table for 65C02
-        self.label("%s_JMP" % (self.niceName))
+        self.label("%s_JMP" % (self.slug))
         for shift in range(self.screen.numShifts):
-            self.addr("%s_SHIFT%d" % (self.niceName, shift))
+            self.addr("%s_SHIFT%d" % (self.slug, shift))
 
     def jump6502(self):
         self.save_axy_6502()
@@ -248,16 +272,16 @@ class Sprite(Listing):
         self.asm("ldx MOD%d_%d,y" % (self.screen.numShifts, self.screen.bitsPerPixel))
 
         # Fast jump table routine; faster and smaller than self-modifying code
-        self.asm("lda %s_JMP+1,x" % (self.niceName))
+        self.asm("lda %s_JMP+1,x" % (self.slug))
         self.asm("pha")
-        self.asm("lda %s_JMP,x" % (self.niceName))
+        self.asm("lda %s_JMP,x" % (self.slug))
         self.asm("pha")
         self.asm("rts\n")
 
         # Bit-shift jump table for generic 6502
-        self.label("%s_JMP" % (self.niceName))
+        self.label("%s_JMP" % (self.slug))
         for shift in range(self.screen.numShifts):
-            self.addr("%s_SHIFT%d-1" % (self.niceName,shift))
+            self.addr("%s_SHIFT%d-1" % (self.slug,shift))
 
     def blitShift(self, shift):
         # Blitting functions
@@ -267,7 +291,7 @@ class Sprite(Listing):
         # SAVE_AXY + RESTORE_AXY + rts +    sprite jump table
         cycleCount = 9 + 12 + 6 +   3 + 4 + 6
     
-        self.label("%s_SHIFT%d" % (self.niceName,shift))
+        self.label("%s_SHIFT%d" % (self.slug,shift))
 
         colorStreams = self.screen.byteStreamsFromPixels(shift, self)
         maskStreams = self.screen.byteStreamsFromPixels(shift, self, True)
@@ -278,6 +302,7 @@ class Sprite(Listing):
         if self.backing_store:
             byteWidth = len(colorStreams[0])
             self.asm("jsr savebg_%dx%d" % (byteWidth, self.height))
+            self.backing_store_sizes.add((byteWidth, self.height))
 
         self.asm("ldx PARAM1")
         cycleCount += 3
@@ -594,6 +619,7 @@ class HGRBW(HGR):
 class RowLookup(Listing):
     def __init__(self, assembler, screen):
         Listing.__init__(self, assembler)
+        self.slug = "hgrrows"
         self.generate_y(screen)
 
     def generate_y(self, screen):
@@ -615,6 +641,7 @@ class RowLookup(Listing):
 class ColLookup(Listing):
     def __init__(self, assembler, screen):
         Listing.__init__(self, assembler)
+        self.slug = "hgrcols-%dx%d" % (screen.numShifts, screen.bitsPerPixel)
         self.generate_x(screen)
 
     def generate_x(self, screen):
@@ -648,6 +675,7 @@ if __name__ == "__main__":
     parser.add_argument("-p", "--processor", default="any", choices=["any","6502", "65C02"], help="Processor type (default: %(default)s)")
     parser.add_argument("-s", "--screen", default="hgrcolor", choices=["hgrcolor","hgrbw"], help="Screen format (default: %(default)s)")
     parser.add_argument("-n", "--name", default="", help="Name for generated assembly function (default: based on image filename)")
+    parser.add_argument("-o", "--output-prefix", default="", help="Base name to create a set of output files. If not supplied, all code will be sent to stdout.")
     parser.add_argument("files", metavar="IMAGE", nargs="*", help="a PNG image [or a list of them]. PNG files must not have an alpha channel!")
     options, extra_args = parser.parse_known_args()
 
@@ -670,6 +698,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     listings = []
+    luts = {}
 
     for pngfile in options.files:
         try:
@@ -680,6 +709,13 @@ if __name__ == "__main__":
         except png.Error, e:
             print "%s: %s" % (pngfile, e)
             sys.exit(1)
+        if options.output_prefix:
+            r = RowLookup(assembler, screen)
+            luts[r.slug] = r
+            c = ColLookup(assembler, screen)
+            luts[c.slug] = c
+
+    listings.extend([luts[k] for k in sorted(luts.keys())])
 
     if options.rows:
         listings.append(RowLookup(assembler, screen))
@@ -688,7 +724,14 @@ if __name__ == "__main__":
         listings.append(ColLookup(assembler, screen))
 
     if listings:
-        print disclaimer
+        if options.output_prefix:
+            driver = Listing(assembler)
+            for source in listings:
+                genfile = source.write(options.output_prefix, disclaimer)
+                driver.include(genfile)
+            driver.write(options.output_prefix, disclaimer)
+        else:
+            print disclaimer
 
-        for section in listings:
-            print section
+            for section in listings:
+                print section

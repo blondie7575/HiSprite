@@ -28,7 +28,10 @@ colortest.dsk: HiSprite.py colortest.s bwsprite.s
 	atasm -ocolortest.xex colortest.s -Lcolortest.var -gcolortest.lst
 	atrcopy colortest.dsk boot -b colortest.xex --brun 6000 -f
 
-multitest.dsk: HiSprite.py multitest.s colorsprite.s bwsprite.s
+multitest-sprite-driver.s: HiSprite.py $(BWSPRITE)
+	python HiSprite.py -a mac65 -p 6502 -s hgrbw -m -b -o multitest $(BWSPRITE) $(COLORSPRITE)
+
+multitest.dsk: HiSprite.py multitest.s multitest-sprite-driver.s
 	atasm -omultitest.xex multitest.s -Lmultitest.var -gmultitest.lst
 	atrcopy multitest.dsk boot -b multitest.xex --brun 6000 -f
 
@@ -36,4 +39,4 @@ clean:
 	rm -f rowlookup.s collookupbw.s collookupcolor.s
 	rm -f bwtest.dsk bwtest.xex bwtest.var bwtest.lst
 	rm -f colortest.dsk colortest.xex colortest.var colortest.lst
-	rm -f multitest.dsk multitest.xex multitest.var multitest.lst
+	rm -f multitest.dsk multitest.xex multitest.var multitest.lst multitest-sprite-driver.s multitest-bwsprite.s multitest-hgrcols-7x1.s multitest-hgrrows.s

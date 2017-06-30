@@ -54,12 +54,13 @@ def slugify(s):
 
 class AssemblerSyntax(object):
     extension = "s"
+    comment_char = ";"
 
     def asm(self, text):
         return "\t%s" % text
 
     def comment(self, text):
-        return "\t; %s" % text
+        return "\t%s %s" % (self.comment_char, text)
 
     def label(self, text):
         return text
@@ -132,12 +133,24 @@ class Listing(object):
             fh.write(str(self))
         return filename
 
-    def out(self, line):
+    def out(self, line=""):
         self.flush_stash()
         self.lines.append(line)
 
     def out_append_last(self, line):
         self.lines[-1] += line
+
+    def pop_asm(self, cmd=""):
+        self.flush_stash()
+        if cmd:
+            search = self.assembler.asm(cmd)
+            i = -1
+            while self.lines[i].strip().startswith(self.assembler.comment_char):
+                i -= 1
+            if self.lines[i] == search:
+                self.lines.pop(i)
+        else:
+            self.lines.pop(-1)
 
     def label(self, text):
         self.out(self.assembler.label(text))
@@ -303,18 +316,9 @@ class Sprite(Listing):
             byteWidth = len(colorStreams[0])
             self.asm("jsr savebg_%dx%d" % (byteWidth, self.height))
             self.backing_store_sizes.add((byteWidth, self.height))
-
-        self.asm("ldx PARAM1")
-        cycleCount += 3
-        rowStartCode,extraCycles = self.rowStartCalculatorCode();
-        self.out(rowStartCode)
-        cycleCount += extraCycles
+            cycleCount += 6
         
-        spriteChunks, cycleCount, optimizationCount = self.generateBlitter(colorStreams, maskStreams, cycleCount)
-        
-        for row in range(self.height):
-            for chunkIndex in range(len(spriteChunks)):
-                self.out(spriteChunks[chunkIndex][row])
+        cycleCount, optimizationCount = self.generateBlitter(colorStreams, maskStreams, cycleCount)
 
         if self.processor == "any":
             self.out(".ifpC02")
@@ -333,70 +337,83 @@ class Sprite(Listing):
 
     def generateBlitter(self, colorStreams, maskStreams, baseCycleCount):
         byteWidth = len(colorStreams[0])
-        spriteChunks = [["" for y in range(self.height)] for x in range(byteWidth)]
         
         cycleCount = baseCycleCount
         optimizationCount = 0
 
         for row in range(self.height):
-            
+            cycleCount += self.rowStartCalculatorCode(row)
+
             byteSplits = colorStreams[row]
             maskSplits = maskStreams[row]
-            
-            # Generate blitting code
-            for chunkIndex in range(len(byteSplits)):
-                
-                # Optimization
-                if maskSplits[chunkIndex] == "01111111" and not self.backing_store:
-                    optimizationCount += 1
-                else:
-                    value = self.binary_constant(byteSplits[chunkIndex])
+            byteCount = len(byteSplits)
 
-                    # Store byte into video memory
-                    if self.xdraw:
-                        spriteChunks[chunkIndex][row] = \
-                        "\tlda (SCRATCH0),y\n" + \
-                        "\teor %s\n" % value + \
-                        "\tsta (SCRATCH0),y\n";
-                        cycleCount += 5 + 2 + 6
-                    elif self.use_mask:
-                        mask = self.binary_constant(maskSplits[chunkIndex])
-                        spriteChunks[chunkIndex][row] = \
-                        "\tlda (SCRATCH0),y\n" + \
-                        "\tand %s\n" % mask + \
-                        "\tora %s\n" % value + \
-                        "\tsta (SCRATCH0),y\n";
-                        cycleCount += 5 + 2 + 6
-                    else:
-                        spriteChunks[chunkIndex][row] = \
-                        "\tlda %s\n" % value + \
-                        "\tsta (SCRATCH0),y\n";
-                        cycleCount += 2 + 6
-                
-                # Increment indices
-                if chunkIndex == len(byteSplits)-1:
-                    spriteChunks[chunkIndex][row] += "\n"
-                else:   
-                    spriteChunks[chunkIndex][row] += "\tiny"
+            # number of trailing iny to remove due to unchanged bytes at the
+            # end of the row
+            skip_iny = 0
+
+            # Generate blitting code
+            for index, (value, mask) in enumerate(zip(byteSplits, maskSplits)):
+                if index > 0:
+                    self.asm("iny")
                     cycleCount += 2
 
-            # Finish the row
-            if row<self.height-1:
-                rowStartCode, extraCycles = self.rowStartCalculatorCode()
-                spriteChunks[chunkIndex][row] += "\tinx\n" + rowStartCode;
-                cycleCount += 2 + extraCycles
-                
-        return spriteChunks, cycleCount, optimizationCount
+                # Optimization
+                if mask == "01111111":
+                    optimizationCount += 1
+                    self.comment_line("byte %d: skipping! unchanged byte (mask = %s)" % (index, mask))
+                    skip_iny += 1
+                else:
+                    value = self.binary_constant(value)
+                    skip_iny = 0
+                    # Store byte into video memory
+                    if self.xdraw:
+                        self.asm("lda (SCRATCH0),y")
+                        self.asm("eor %s" % value)
+                        self.asm("sta (SCRATCH0),y");
+                        cycleCount += 5 + 2 + 6
+                    elif self.use_mask:
+                        if mask == "00000000":
+                            # replacing all the bytes; no need for and/or!
+                            self.asm("lda %s" % value)
+                            self.asm("sta (SCRATCH0),y");
+                            cycleCount += 2 + 5
+                        else:
+                            mask = self.binary_constant(mask)
+                            self.asm("lda (SCRATCH0),y")
+                            self.asm("and %s" % mask)
+                            self.asm("ora %s" % value)
+                            self.asm("sta (SCRATCH0),y");
+                            cycleCount += 5 + 2 + 2 + 6
+                    else:
+                        self.asm("lda %s" % value)
+                        self.asm("sta (SCRATCH0),y");
+                        cycleCount += 2 + 6
 
-    def rowStartCalculatorCode(self):
-        return \
-        "\tlda HGRROWS_H1,x\n" + \
-        "\tsta SCRATCH1\n" + \
-        "\tlda HGRROWS_L,x\n" + \
-        "\tsta SCRATCH0\n" + \
-        "\tldy PARAM0\n" + \
-        "\tlda DIV%d_%d,y\n" % (self.screen.numShifts, self.screen.bitsPerPixel) + \
-        "\ttay\n", 4 + 3 + 4 + 3 + 3 + 4 + 2;
+            while skip_iny > 0:
+                self.pop_asm("iny")
+                skip_iny -= 1
+                cycleCount -= 2
+
+        return cycleCount, optimizationCount
+
+    def rowStartCalculatorCode(self, row):
+        self.out()
+        self.comment_line("row %d" % row)
+        if row == 0:
+            self.asm("ldx PARAM1")
+            cycles = 3
+        else:
+            self.asm("inx")
+            cycles = 2
+        self.asm("lda HGRROWS_H1,x")
+        self.asm("sta SCRATCH1")
+        self.asm("lda HGRROWS_L,x")
+        self.asm("sta SCRATCH0")
+        self.asm("ldy PARAM0")
+        self.asm("lda DIV%d_%d,y" % (self.screen.numShifts, self.screen.bitsPerPixel))
+        self.asm("tay")
+        return cycles + 4 + 3 + 4 + 3 + 3 + 4 + 2;
 
 
 def shiftStringRight(string, shift, bitsPerPixel, fillerBit):
@@ -698,7 +715,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     listings = []
-    luts = {}
+    luts = {}  # dict of lookup tables to prevent duplication in output files
 
     for pngfile in options.files:
         try:

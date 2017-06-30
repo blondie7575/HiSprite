@@ -57,8 +57,10 @@ initsprites
 ; Draw sprites by looping through the list of sprites
 renderstart
     ldy #0
+    sty PARAM3
 
 renderloop
+    ldy PARAM3
     lda sprite_active,y
     bmi renderend       ; end of list if negative
     beq renderskip      ; skip if zero
@@ -74,7 +76,7 @@ renderloop
 jsrsprite
     jsr $ffff           ; wish you could JSR ($nnnn)
 renderskip
-    iny
+    inc PARAM3
     bne renderloop      ; branch always because always positive; otherwise limited to 255 sprites (haha)
 
 renderend

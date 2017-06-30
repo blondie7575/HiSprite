@@ -29,7 +29,7 @@ colortest.dsk: HiSprite.py colortest.s bwsprite.s
 	atrcopy colortest.dsk boot -b colortest.xex --brun 6000 -f
 
 multitest-sprite-driver.s: HiSprite.py $(BWSPRITE)
-	python HiSprite.py -a mac65 -p 6502 -s hgrbw -m -b -o multitest $(BWSPRITE) $(COLORSPRITE)
+	python HiSprite.py -a mac65 -p 6502 -s hgrbw -m -b -k -o multitest $(BWSPRITE) $(COLORSPRITE)
 
 multitest.dsk: HiSprite.py multitest.s multitest-sprite-driver.s
 	atasm -omultitest.xex multitest.s -Lmultitest.var -gmultitest.lst

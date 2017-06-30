@@ -635,10 +635,10 @@ class HGRBW(HGR):
         b = pixelData[row][col*3+2]
         color = self.black
         
-        if r==255 and g==255 and b==255:
-            color = self.white
-        elif r==g and r==b and r!=0 and r!=255:   # Any gray is chroma key
+        if abs(r - g) < 16 and abs(g - b) < 16 and r!=0 and r!=255:   # Any grayish color is chroma key
             color = self.key
+        elif r>25 or g>25 or b>25:  # pretty much all other colors are white
+            color = self.white
         else:
             color = self.black
         return color

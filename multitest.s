@@ -251,4 +251,3 @@ sprite_diry
 
 .include multitest-sprite-driver.s
 .include backingstore.s
-.include backingstore-3x11.s

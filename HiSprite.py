@@ -122,6 +122,9 @@ class Listing(object):
         self.flush_stash()
         return "\n".join(self.lines) + "\n"
 
+    def add_listing(self, other):
+        self.lines.extend(other.lines)
+
     def get_filename(self, basename):
         return "%s-%s.%s" % (basename, self.slug.lower(), self.assembler.extension)
 
@@ -686,6 +689,157 @@ class ColLookup(Listing):
             self.byte("$%02x" % ((pixel % screen.numShifts) * 2), screen.numShifts)
 
 
+class BackingStore(Listing):
+    # Each entry in the stack includes:
+    # 2 bytes: address of restore routine
+    # 1 byte: x coordinate
+    # 1 byte: y coordinate
+    # nn: x * y bytes of data, in lists of rows
+
+    def __init__(self, assembler, byte_width, row_height):
+        Listing.__init__(self, assembler)
+        self.byte_width = byte_width
+        self.row_height = row_height
+        self.save_label = "savebg_%dx%d" % (byte_width, row_height)
+        self.restore_label = "restorebg_%dx%d" % (byte_width, row_height)
+        self.space_needed = self.compute_size()
+        self.create_save()
+        self.out()
+        self.create_restore()
+        self.out()
+
+    def compute_size(self):
+        return 2 + 1 + 1 + (self.byte_width * self.row_height)
+
+    def create_save(self):
+        self.label(self.save_label)
+
+        # reserve space in the backing store stack
+        self.asm("sec")
+        self.asm("lda bgstore")
+        self.asm("sbc #%d" % self.space_needed)
+        self.asm("sta bgstore")
+        self.asm("lda bgstore+1")
+        self.asm("sbc #0")
+        self.asm("sta bgstore+1")
+
+        # save the metadata
+        self.asm("ldy #0")
+        self.asm("lda #<%s" % self.restore_label)
+        self.asm("sta (bgstore),y")
+        self.asm("iny")
+        self.asm("lda #>%s" % self.restore_label)
+        self.asm("sta (bgstore),y")
+        self.asm("iny")
+        self.asm("lda PARAM0")
+        self.asm("sta (bgstore),y")
+        self.asm("iny")
+        self.asm("lda PARAM1")
+
+        # Note that we can't clobber PARAM1 like the restore routine can
+        # because this is called in the sprite drawing routine and these
+        # values must be retained to draw the sprite in the right place!
+        self.asm("sta SCRATCH0")
+        self.asm("sta (bgstore),y")
+        self.asm("iny")
+
+        loop_label, col_label = self.smc_row_col(self.save_label, "SCRATCH0")
+
+        for c in range(self.byte_width):
+            self.label(col_label % c)
+            self.asm("lda $2000,x")
+            self.asm("sta (bgstore),y")
+            self.asm("iny")
+            if c < self.byte_width - 1:
+                # last loop doesn't need this
+                self.asm("inx")
+
+        self.asm("inc SCRATCH0")
+
+        self.asm("cpy #%d" % self.space_needed)
+        self.asm("bcc %s" % loop_label)
+
+        self.asm("rts")
+
+    def smc_row_col(self, label, row_var):
+        # set up smc for hires column, because the starting column doesn't
+        # change when moving to the next row
+        self.asm("ldx PARAM0")
+        self.asm("lda DIV7_1,x")
+        smc_label = "%s_smc1" % label
+        self.asm("sta %s+1" % smc_label)
+
+        loop_label = "%s_line" % label
+        # save a line, starting from the topmost and working down
+        self.label(loop_label)
+        self.asm("ldx %s" % row_var)
+
+        self.asm("lda HGRROWS_H1,x")
+        col_label = "%s_col%%s" % label
+        for c in range(self.byte_width):
+            self.asm("sta %s+2" % (col_label % c))
+        self.asm("lda HGRROWS_L,x")
+        for c in range(self.byte_width):
+            self.asm("sta %s+1" % (col_label % c))
+
+        self.label(smc_label)
+        self.asm("ldx #$ff")
+        return loop_label, col_label
+
+    def create_restore(self):
+        # bgstore will be pointing right to the data to be blitted back to the
+        # screen, which is 4 bytes into the bgstore array. Everything before
+        # the data will have already been pulled off by the driver in order to
+        # figure out which restore routine to call.  Y will be 4 upon entry,
+        # and PARAM0 and PARAM1 will be filled with the x & y values.
+        #
+        # also, no need to save registers because this is being called from a
+        # driver that will do all of that.
+        self.label(self.restore_label)
+
+        # we can clobber the heck out of PARAM1 because we're being called from
+        # the restore driver and when we return we are just going to load it up
+        # with the next value anyway.
+        loop_label, col_label = self.smc_row_col(self.restore_label, "PARAM1")
+
+        for c in range(self.byte_width):
+            self.asm("lda (bgstore),y")
+            self.label(col_label % c)
+            self.asm("sta $2000,x")
+            self.asm("iny")
+            if c < self.byte_width - 1:
+                # last loop doesn't need this
+                self.asm("inx")
+
+        self.asm("inc PARAM1")
+        self.asm("cpy #%d" % self.space_needed)
+        self.asm("bcc %s" % loop_label)
+
+        self.asm("rts")
+
+
+class BackingStoreDriver(Listing):
+    # Driver to restore the screen using all the saved data.
+    # The backing store is a stack that grows downward in order to restore the
+    # chunks in reverse order that they were saved.
+    #
+    # variables used:
+    #   bgstore: (lo byte, hi byte) 1 + the first byte of free memory.
+    #            I.e. points just beyond the last byte
+    #   PARAM0: (byte) x coord
+    #   PARAM1: (byte) y coord
+    #
+    # everything else is known because the sizes of each erase/restore
+    # routine are hardcoded because this is a sprite *compiler*.
+    def __init__(self, assembler, sizes):
+        Listing.__init__(self, assembler)
+        self.slug = "backing-store"
+        for byte_width, row_height in sizes:
+            code = BackingStore(assembler, byte_width, row_height)
+            self.add_listing(code)
+
+
+
 if __name__ == "__main__":
     disclaimer = '''
 ; This file was generated by HiSprite.py, a sprite compiler by Quinn Dunki.
@@ -731,13 +885,14 @@ if __name__ == "__main__":
 
     for pngfile in options.files:
         try:
-            listings.append(Sprite(pngfile, assembler, screen, options.xdraw, options.mask, options.backing_store, options.clobber, options.processor, options.name))
+            sprite_code = Sprite(pngfile, assembler, screen, options.xdraw, options.mask, options.backing_store, options.clobber, options.processor, options.name)
         except RuntimeError, e:
             print "%s: %s" % (pngfile, e)
             sys.exit(1)
         except png.Error, e:
             print "%s: %s" % (pngfile, e)
             sys.exit(1)
+        listings.append(sprite_code)
         if options.output_prefix:
             r = RowLookup(assembler, screen)
             luts[r.slug] = r
@@ -754,6 +909,9 @@ if __name__ == "__main__":
 
     if listings:
         if options.output_prefix:
+            if Sprite.backing_store_sizes:
+                backing_store_code = BackingStoreDriver(assembler, Sprite.backing_store_sizes)
+                listings.append(backing_store_code)
             driver = Listing(assembler)
             for source in listings:
                 genfile = source.write(options.output_prefix, disclaimer)

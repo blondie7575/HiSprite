@@ -33,10 +33,10 @@ restorebg_init
 restorebg_driver
     ldy #0
     lda (bgstore),y
-    sta restorebg_jsr+1
+    sta restorebg_jsr_smc+1
     iny
     lda (bgstore),y
-    sta restorebg_jsr+2
+    sta restorebg_jsr_smc+2
     iny
     lda (bgstore),y
     sta PARAM0
@@ -44,7 +44,7 @@ restorebg_driver
     lda (bgstore),y
     sta PARAM1
     iny
-restorebg_jsr
+restorebg_jsr_smc
     jsr $ffff
 
     clc

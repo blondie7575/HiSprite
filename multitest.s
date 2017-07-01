@@ -65,9 +65,9 @@ initsprites
 renderstart
     lda #sprite_l - sprite_active
     sta RENDERCOUNT
-    inc renderroundrobin+1
+    inc renderroundrobin_smc+1
 
-renderroundrobin
+renderroundrobin_smc
     ldy #0
     sty PARAM3
 
@@ -78,15 +78,15 @@ renderloop
     lda sprite_active,y
     beq renderskip      ; skip if zero
     lda sprite_l,y
-    sta jsrsprite+1
+    sta jsrsprite_smc+1
     lda sprite_h,y
-    sta jsrsprite+2
+    sta jsrsprite_smc+2
     lda sprite_x,y
     sta PARAM0
     lda sprite_y,y
     sta PARAM1
 
-jsrsprite
+jsrsprite_smc
     jsr $ffff           ; wish you could JSR ($nnnn)
 renderskip
     inc PARAM3

@@ -743,6 +743,9 @@ class BackingStore(Listing):
         self.asm("sta (bgstore),y")
         self.asm("iny")
 
+        # The unrolled code is taken from Quinn's row sweep backing store
+        # code in a previous version of HiSprite
+
         loop_label, col_label = self.smc_row_col(self.save_label, "SCRATCH0")
 
         for c in range(self.byte_width):
@@ -831,13 +834,70 @@ class BackingStoreDriver(Listing):
     #
     # everything else is known because the sizes of each erase/restore
     # routine are hardcoded because this is a sprite *compiler*.
+    #
+    # Note that sprites of different sizes will have different sized entries in
+    # the stack, so the entire list has to be processed in order. But you want
+    # that anyway, so it's not a big deal.
+    #
+    # The global variable 'bgstore' is used as the stack pointer. It must be
+    # initialized to a page boundary, the stack grows downward from there.
+    # starting from the last byte on the previous page. E.g. if the initial
+    # value is $c000, the stack grows down using $bfff as the highest address,
+    # the initial bgstore value must point to 1 + the last usable byte
+    #
+    # All registers are clobbered because there's no real need to save them
+    # since this will be called from the main game loop.
+
     def __init__(self, assembler, sizes):
         Listing.__init__(self, assembler)
         self.slug = "backing-store"
+        self.add_driver()
         for byte_width, row_height in sizes:
             code = BackingStore(assembler, byte_width, row_height)
             self.add_listing(code)
 
+    def add_driver(self):
+        # Initialization routine needs to be called once at the beginning
+        # of the program so that the savebg_* functions will have a valid
+        # bgstore
+        self.label("restorebg_init")
+        self.asm("lda #0")
+        self.asm("sta bgstore")
+        self.asm("lda #BGTOP")
+        self.asm("sta bgstore+1")
+        self.asm("rts")
+        self.out()
+
+        # Driver routine to loop through the bgstore stack and copy the
+        # data back to the screen
+        self.label("restorebg_driver")
+        self.asm("ldy #0")
+        self.asm("lda (bgstore),y")
+        self.asm("sta restorebg_jsr_smc+1")
+        self.asm("iny")
+        self.asm("lda (bgstore),y")
+        self.asm("sta restorebg_jsr_smc+2")
+        self.asm("iny")
+        self.asm("lda (bgstore),y")
+        self.asm("sta PARAM0")
+        self.asm("iny ")
+        self.asm("lda (bgstore),y")
+        self.asm("sta PARAM1")
+        self.asm("iny")
+        self.label("restorebg_jsr_smc")
+        self.asm("jsr $ffff")
+
+        self.asm("clc")
+        self.asm("tya")  # y contains the number of bytes processed
+        self.asm("adc bgstore")
+        self.asm("sta bgstore")
+        self.asm("lda bgstore+1")
+        self.asm("adc #0")
+        self.asm("sta bgstore+1")
+        self.asm("cmp #BGTOP")
+        self.asm("bcc restorebg_driver")
+        self.asm("rts")
+        self.out()
 
 
 if __name__ == "__main__":

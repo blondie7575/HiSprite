@@ -250,4 +250,3 @@ sprite_diry
 
 
 .include multitest-sprite-driver.s
-.include backingstore.s

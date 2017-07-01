@@ -51,6 +51,12 @@ savebg_3x11
     sta (bgstore),y
     iny
 
+    ; set up smc for hires column, because the starting column doesn't change
+    ; when moving to the next row
+    ldx PARAM0
+    lda DIV7_1,x
+    sta savebg_3x11_smc1+1
+
 savebg_3x11_line
     ; save a line, starting from the topmost and working down
     ldx SCRATCH0  ; Calculate Y line
@@ -64,9 +70,8 @@ savebg_3x11_line
     sta savebg_3x11_col1+1
     sta savebg_3x11_col2+1
 
-    ldx PARAM0                              ; Compute hires column
-    lda DIV7_1,x
-    tax
+savebg_3x11_smc1
+    ldx #$ff
 
 savebg_3x11_col0
     lda $2000,x

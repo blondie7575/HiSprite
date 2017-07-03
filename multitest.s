@@ -39,7 +39,7 @@ start
     bit TXTPAGE1
     bit SETHIRES
 
-    ;jsr clrscr
+    jsr clrscr
     jsr initsprites
 
 gameloop
@@ -200,7 +200,7 @@ clrscr
     lda #$20
     sta clr1+2
 clr0
-    lda #$81
+    lda #0
     ldy #0
 clr1
     sta $ffff,y
@@ -210,7 +210,55 @@ clr1
     ldx clr1+2
     cpx #$40
     bcc clr1
+
+clrscr2
+    ldy #1
+clrouter
+    ldx #0
+clrloop
+    lda HGRROWS_H1,x
+    sta SCRATCH1
+    lda HGRROWS_L,x
+    sta SCRATCH0
+    lda tophalf,y
+    cpx #96
+    bcc clrwrite
+    lda bothalf,y
+clrwrite
+    sta (SCRATCH0),y
+    inx
+    cpx #192
+    bcc clrloop
+    iny
+    cpy #40
+    bcs clrend
+    bne clrouter
+clrend
     rts
+
+tophalf
+    .byte 0
+    .byte $88, ~01010101, ~00101010, ~01010101, ~00101010, ~01010101
+    .byte $08, ~00101010, ~01010101, ~00101010, ~01010101, ~00101010
+    .byte $10, ~01010101, ~00101010, ~01010101, ~00101010, ~01010101
+    .byte $1c, ~00101010, ~01010101, ~00101010, ~01010101, ~00101010
+    .byte $88, ~01010101, ~00101010, ~01010101, ~00101010, ~01010101
+    .byte $9c, ~01010101, ~00101010, ~01010101, ~00101010, ~01010101
+    .byte $9c, ~00101010, ~01010101, ~00101010, ~01010101, ~00101010
+    .byte $1c, ~01010101, ~00101010, ~01010101, ~00101010, ~01010101
+
+bothalf
+    .byte 0
+    .byte $9c, ~11010101, ~10101010, ~11010101, ~10101010, ~11010101
+    .byte ~10001000, ~10101010, ~11010101, ~10101010, ~11010101, ~10101010
+    .byte ~00010000, ~11010101, ~10101010, ~11010101, ~10101010, ~11010101
+    .byte $08, ~10101010, ~11010101, ~10101010, ~11010101, ~10101010
+    .byte $9c, ~11010101, ~10101010, ~11010101, ~10101010, ~11010101
+    .byte $9c, ~11010101, ~10101010, ~11010101, ~10101010, ~11010101
+    .byte $88, ~11010101, ~10101010, ~11010101, ~10101010, ~11010101
+    .byte $08, ~10101010, ~11010101, ~10101010, ~11010101, ~10101010
+
+
 
 ; Sprite data is interleaved so a simple indexed mode can be used. This is not
 ; convenient to set up but makes faster accessing because you don't have to 

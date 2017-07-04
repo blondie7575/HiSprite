@@ -6,6 +6,7 @@ BOXW_MAG: ;6 bytes per row
 	SAVE_AXY
 	ldy PARAM0
 	ldx MOD7_2,y
+.ifpC02
 	jmp (BOXW_MAG_JMP,x)
 
 BOXW_MAG_JMP:
@@ -16,6 +17,22 @@ BOXW_MAG_JMP:
 	.addr BOXW_MAG_SHIFT4
 	.addr BOXW_MAG_SHIFT5
 	.addr BOXW_MAG_SHIFT6
+.else
+	lda BOXW_MAG_JMP+1,x
+	pha
+	lda BOXW_MAG_JMP,x
+	pha
+	rts
+
+BOXW_MAG_JMP:
+	.addr BOXW_MAG_SHIFT0-1
+	.addr BOXW_MAG_SHIFT1-1
+	.addr BOXW_MAG_SHIFT2-1
+	.addr BOXW_MAG_SHIFT3-1
+	.addr BOXW_MAG_SHIFT4-1
+	.addr BOXW_MAG_SHIFT5-1
+	.addr BOXW_MAG_SHIFT6-1
+.endif
 
 
 BOXW_MAG_SHIFT0:

@@ -6,6 +6,7 @@ BLACK: ;6 bytes per row
 	SAVE_AXY
 	ldy PARAM0
 	ldx MOD7_2,y
+.ifpC02
 	jmp (BLACK_JMP,x)
 
 BLACK_JMP:
@@ -16,6 +17,22 @@ BLACK_JMP:
 	.addr BLACK_SHIFT4
 	.addr BLACK_SHIFT5
 	.addr BLACK_SHIFT6
+.else
+	lda BLACK_JMP+1,x
+	pha
+	lda BLACK_JMP,x
+	pha
+	rts
+
+BLACK_JMP:
+	.addr BLACK_SHIFT0-1
+	.addr BLACK_SHIFT1-1
+	.addr BLACK_SHIFT2-1
+	.addr BLACK_SHIFT3-1
+	.addr BLACK_SHIFT4-1
+	.addr BLACK_SHIFT5-1
+	.addr BLACK_SHIFT6-1
+.endif
 
 
 BLACK_SHIFT0:

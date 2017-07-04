@@ -32,7 +32,7 @@ metaBuffer0:
 	.byte 0	; X pos
 	.byte 0	;116	; Y pos
 	.byte -1		; X vec
-	.byte -1		; Y vec
+	.byte -2		; Y vec
 
 metaBuffer1:
 	.byte 20	; X pos
@@ -43,7 +43,7 @@ metaBuffer1:
 metaBuffer2:
 	.byte 40	; X pos
 	.byte 0;	67	; Y pos
-	.byte -1	; X vec
+	.byte -2	; X vec
 	.byte -1	; Y vec
 
 metaBuffer3:

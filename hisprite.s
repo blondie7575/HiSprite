@@ -33,7 +33,7 @@ SPRITEPTR_H		= $1c
 MAXSPRITEINDEX		= 3		; Sprite count - 1
 MAXPOSX				= 127	; This demo doesn't wanna do 16 bit math
 MAXPOSY				= 127
-MAXLOCALBATCHINDEX	= 3		; Sprites in batch - 1
+MAXLOCALBATCHINDEX	= 4		; Sprites in batch - 1
 MAXBATCHINDEX		= 0		; Number of batches - 1
 
 ; Macros
@@ -148,12 +148,12 @@ backgroundLoop:
 	jmp backgroundLoop		; 65 cycles overhead per rect
 
 backgroundRestartList:
-;	lda batchMaxIndex
-;	sta spriteNum
+	lda batchMaxIndex
+	sta spriteNum
 	lda #MAXLOCALBATCHINDEX
 	sta batchLocalIndex
 
-	jmp batchLoop		; Skip movement
+;	jmp batchLoop		; Skip movement
 
 movementLoop:
 	; Find our sprite pointer

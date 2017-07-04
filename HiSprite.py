@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import sys,os,png
+import argparse
 
 class Colors:
 	black,magenta,green,orange,blue,white,key = range(7)
@@ -8,25 +9,23 @@ class Colors:
 
 
 def main(argv):
-	
-	if len(argv)<1:
-		usage()
-		exit(0)
+	parser = argparse.ArgumentParser(description="Sprite compiler for 65C02/6502 to generate assembly code to render all shifts of the given sprite, optionally with exclusive-or drawing (if background will be non-black). Generated code has conditional compilation directives for the CC65 assembler to allow the same file to be compiled for either architecture.")
+	parser.add_argument("-v", "--verbose", default=0, action="count")
+	parser.add_argument("-t", "--tables", action="store_true", default=False, help="output only lookup tables for horizontal sprite shifts (division and modulus 7)")
+	parser.add_argument("-x", "--xdraw", action="store_true", default=False, help="use XOR for sprite drawing")
+	parser.add_argument("-b", "--black", action="store_true", default=False, help="render a black rectangle sized to erase the sprite")
+	parser.add_argument("files", metavar="IMAGE", nargs="+", help="a PNG image [or a list of them]. PNG files must not have an alpha channel!")
+	options, extra_args = parser.parse_known_args()
 
-	if sys.argv[1] == "--tables":
+	if options.tables:
 		printHorizontalLookup()
 		exit(0)
 
-	pngfile = sys.argv[1]
-	xdraw = 0
-	black = 0
-	if len(argv)>1:
-		if sys.argv[2] == "--xdraw":
-			xdraw = 1
-		else:
-			if sys.argv[2] == "--black":
-				black = 1
-	
+	for pngfile in options.files:
+		process(pngfile, options.xdraw, options.black)
+
+
+def process(pngfile, xdraw=False, black=False):
 	reader = png.Reader(pngfile)
 	try:
 		pngdata = reader.asRGB8()
@@ -49,18 +48,34 @@ def main(argv):
 	print "\tSAVE_AXY"
 	print "\tldy PARAM0"
 	print "\tldx MOD7_2,y"
+	print ".ifpC02"
 	print "\tjmp (%s_JMP,x)\n" % (niceName)
+	offset_suffix = ""
 	
-	# Bit-shift jump table
+	# Bit-shift jump table for 65C02
 	print "%s_JMP:" % (niceName)	
 	for shift in range(0,7):
 		print "\t.addr %s_SHIFT%d" % (niceName,shift)
+
+	print ".else"
+	# Fast jump table routine; faster and smaller than self-modifying code
+	print "\tlda %s_JMP+1,x" % (niceName)
+	print "\tpha"
+	print "\tlda %s_JMP,x" % (niceName)
+	print "\tpha"
+	print "\trts\n"
+
+	# Bit-shift jump table for generic 6502
+	print "%s_JMP:" % (niceName)
+	for shift in range(0,7):
+		print "\t.addr %s_SHIFT%d-1" % (niceName,shift)
+	print ".endif"
 
 	# Blitting functions
 	print "\n"
 	for shift in range(0,7):
 		
-		# Track cycle count of the blitter. We start with fixed overhead:
+		# Track cycle count of the blitter (only accurate for 65C02 at the moment). We start with fixed overhead:
 		# SAVE_AXY + RESTORE_AXY + rts +    sprite jump table
 		cycleCount = 9 + 12 + 6 +   3 + 4 + 6
 	
@@ -303,22 +318,7 @@ def printHorizontalLookup():
 	print "\n\nMOD7_2:"
 	for pixel in range(140):
 		print "\t.byte $%02x" % ((pixel % 7)*2)
-		
-		
-def usage():
-	print '''
-Usages: 
-	HiSprite <png file> [--xdraw]
-		Generates 6502 assembly to render all shifts of the given sprite,
-		optionally with exclusive-or drawing (if background will be non-black)
-		
-	HiSprite --tables
-		Generates lookup tables for horizontal sprite shifts (division and modulus 7)
-		
-PNG file must not have an alpha channel!
-'''
-	sys.exit(2)
-	
+
 
 def disclaimer():
 	print '''

@@ -12,6 +12,7 @@
 
 ; Softswitches
 TEXT = $c050
+TEXT2 = $c051
 HIRES1 = $c057
 HIRES2 = $c058
 
@@ -33,7 +34,7 @@ SPRITEPTR_H		= $1c
 MAXSPRITEINDEX		= 3		; Sprite count - 1
 MAXPOSX				= 127	; This demo doesn't wanna do 16 bit math
 MAXPOSY				= 127
-MAXLOCALBATCHINDEX	= 4		; Sprites in batch - 1
+MAXLOCALBATCHINDEX	= 3		; Sprites in batch - 1
 MAXBATCHINDEX		= 0		; Number of batches - 1
 
 ; Macros
@@ -76,7 +77,7 @@ main:
 	jsr VenetianFill
 
 mainLoop:
-
+	jsr checkKbd
 
 renderLoop:
 
@@ -99,7 +100,7 @@ renderLoop:
 	lda (SPRITEPTR_L),y ; 5
 	sta PARAM0 ; 3
 
-	jsr BOXW_MAG ; 6		48 cycles overhead to here
+	jsr SPACESHIP ; 6		48 cycles overhead to here
 
 	; Next sprite
 	dec spriteNum ; 6
@@ -232,31 +233,30 @@ batchContinue:
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; delayShort
-; Sleeps for ~1/30th second
+; checkKbd
+; Exits app on a keystroke
 ;
-delayShort:
-	SAVE_AXY
+checkKbd:
+;	rts
+	lda $c000
+	bpl checkKbdDone
+	sta $c010
 
-	ldy		#$06	; Loop a bit
-delayShortOuter:
-	ldx		#$ff
-delayShortInner:
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	dex
-	bne		delayShortInner
-	dey
-	bne		delayShortOuter
+	cmp #241		; 'q' with high bit set
+	bne	checkKbdDone
 
-	RESTORE_AXY
+	jsr EnableText
+
+;	pla		; Pull our own frame off the stack...
+;	pla
+;	pla
+;	pla
+	pla		; ...four local variables + return address...
+	pla
+	rts		; ...so we can quit to ProDOS from here
+
+checkKbdDone:
 	rts
-
 
 
 spriteNum:

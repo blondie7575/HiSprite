@@ -8,12 +8,18 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; EnableHires
-; Trashes A
 ;
 EnableHires:
-	lda TEXT
-	lda HIRES1
-	lda HIRES2
+	sta TEXT
+	sta HIRES1
+	sta HIRES2
+	rts
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; EnableText
+;
+EnableText:
+	sta TEXT2
 	rts
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

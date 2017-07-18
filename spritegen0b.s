@@ -69,9 +69,28 @@ BLACK_SHIFT0:
 	lda #0
 	sta (SCRATCH0),y
 	iny
+	lda #0
+	sta (SCRATCH0),y
+	iny
+	iny
+	iny
+	iny
+
+	inx
+	lda HGRROWS_H1,x
+	sta SCRATCH1
+	lda HGRROWS_L,x
+	sta SCRATCH0
+	ldy PARAM0
+	lda DIV7_2,y
+	tay
+
+	lda #0
+	sta (SCRATCH0),y
 	iny
 	lda #0
 	sta (SCRATCH0),y
+	iny
 	iny
 	iny
 	iny
@@ -133,8 +152,6 @@ BLACK_SHIFT0:
 	lda #0
 	sta (SCRATCH0),y
 	iny
-	lda #0
-	sta (SCRATCH0),y
 	iny
 	iny
 	iny
@@ -154,27 +171,6 @@ BLACK_SHIFT0:
 	lda #0
 	sta (SCRATCH0),y
 	iny
-	lda #0
-	sta (SCRATCH0),y
-	iny
-	iny
-	iny
-
-	inx
-	lda HGRROWS_H1,x
-	sta SCRATCH1
-	lda HGRROWS_L,x
-	sta SCRATCH0
-	ldy PARAM0
-	lda DIV7_2,y
-	tay
-
-	lda #0
-	sta (SCRATCH0),y
-	iny
-	iny
-	lda #0
-	sta (SCRATCH0),y
 	iny
 	iny
 	iny
@@ -201,7 +197,7 @@ BLACK_SHIFT0:
 	iny
 
 	RESTORE_AXY
-	rts	;Cycle count: 497, Optimized 26 rows.
+	rts	;Cycle count: 481, Optimized 28 rows.
 
 
 
@@ -239,9 +235,9 @@ BLACK_SHIFT1:
 	lda #0
 	sta (SCRATCH0),y
 	iny
-	iny
 	lda #0
 	sta (SCRATCH0),y
+	iny
 	iny
 	iny
 	iny
@@ -342,6 +338,8 @@ BLACK_SHIFT1:
 	lda #0
 	sta (SCRATCH0),y
 	iny
+	lda #0
+	sta (SCRATCH0),y
 	iny
 	lda #0
 	sta (SCRATCH0),y
@@ -361,8 +359,6 @@ BLACK_SHIFT1:
 	lda #0
 	sta (SCRATCH0),y
 	iny
-	lda #0
-	sta (SCRATCH0),y
 	iny
 	lda #0
 	sta (SCRATCH0),y
@@ -406,9 +402,28 @@ BLACK_SHIFT2:
 	lda DIV7_2,y
 	tay
 
+	iny
 	lda #0
 	sta (SCRATCH0),y
 	iny
+	lda #0
+	sta (SCRATCH0),y
+	iny
+	iny
+	iny
+
+	inx
+	lda HGRROWS_H1,x
+	sta SCRATCH1
+	lda HGRROWS_L,x
+	sta SCRATCH0
+	ldy PARAM0
+	lda DIV7_2,y
+	tay
+
+	iny
+	lda #0
+	sta (SCRATCH0),y
 	iny
 	lda #0
 	sta (SCRATCH0),y
@@ -488,30 +503,9 @@ BLACK_SHIFT2:
 	lda DIV7_2,y
 	tay
 
-	lda #0
-	sta (SCRATCH0),y
 	iny
 	lda #0
 	sta (SCRATCH0),y
-	iny
-	lda #0
-	sta (SCRATCH0),y
-	iny
-	iny
-	iny
-
-	inx
-	lda HGRROWS_H1,x
-	sta SCRATCH1
-	lda HGRROWS_L,x
-	sta SCRATCH0
-	ldy PARAM0
-	lda DIV7_2,y
-	tay
-
-	lda #0
-	sta (SCRATCH0),y
-	iny
 	iny
 	lda #0
 	sta (SCRATCH0),y
@@ -541,7 +535,7 @@ BLACK_SHIFT2:
 	iny
 
 	RESTORE_AXY
-	rts	;Cycle count: 497, Optimized 26 rows.
+	rts	;Cycle count: 489, Optimized 27 rows.
 
 
 
@@ -576,9 +570,28 @@ BLACK_SHIFT3:
 	lda DIV7_2,y
 	tay
 
+	iny
 	lda #0
 	sta (SCRATCH0),y
 	iny
+	lda #0
+	sta (SCRATCH0),y
+	iny
+	iny
+	iny
+
+	inx
+	lda HGRROWS_H1,x
+	sta SCRATCH1
+	lda HGRROWS_L,x
+	sta SCRATCH0
+	ldy PARAM0
+	lda DIV7_2,y
+	tay
+
+	iny
+	lda #0
+	sta (SCRATCH0),y
 	iny
 	lda #0
 	sta (SCRATCH0),y
@@ -637,8 +650,6 @@ BLACK_SHIFT3:
 	lda DIV7_2,y
 	tay
 
-	lda #0
-	sta (SCRATCH0),y
 	iny
 	lda #0
 	sta (SCRATCH0),y
@@ -658,8 +669,6 @@ BLACK_SHIFT3:
 	lda DIV7_2,y
 	tay
 
-	lda #0
-	sta (SCRATCH0),y
 	iny
 	lda #0
 	sta (SCRATCH0),y
@@ -679,25 +688,7 @@ BLACK_SHIFT3:
 	lda DIV7_2,y
 	tay
 
-	lda #0
-	sta (SCRATCH0),y
 	iny
-	iny
-	lda #0
-	sta (SCRATCH0),y
-	iny
-	iny
-	iny
-
-	inx
-	lda HGRROWS_H1,x
-	sta SCRATCH1
-	lda HGRROWS_L,x
-	sta SCRATCH0
-	ldy PARAM0
-	lda DIV7_2,y
-	tay
-
 	lda #0
 	sta (SCRATCH0),y
 	iny
@@ -706,12 +697,11 @@ BLACK_SHIFT3:
 	iny
 	lda #0
 	sta (SCRATCH0),y
-	iny
 	iny
 	iny
 
 	RESTORE_AXY
-	rts	;Cycle count: 497, Optimized 26 rows.
+	rts	;Cycle count: 481, Optimized 28 rows.
 
 
 
@@ -750,9 +740,9 @@ BLACK_SHIFT4:
 	lda #0
 	sta (SCRATCH0),y
 	iny
-	iny
 	lda #0
 	sta (SCRATCH0),y
+	iny
 	iny
 	iny
 
@@ -835,27 +825,6 @@ BLACK_SHIFT4:
 	lda #0
 	sta (SCRATCH0),y
 	iny
-	lda #0
-	sta (SCRATCH0),y
-	iny
-	iny
-
-	inx
-	lda HGRROWS_H1,x
-	sta SCRATCH1
-	lda HGRROWS_L,x
-	sta SCRATCH0
-	ldy PARAM0
-	lda DIV7_2,y
-	tay
-
-	iny
-	lda #0
-	sta (SCRATCH0),y
-	iny
-	iny
-	lda #0
-	sta (SCRATCH0),y
 	iny
 	iny
 
@@ -874,6 +843,25 @@ BLACK_SHIFT4:
 	iny
 	lda #0
 	sta (SCRATCH0),y
+	iny
+	lda #0
+	sta (SCRATCH0),y
+	iny
+	iny
+
+	inx
+	lda HGRROWS_H1,x
+	sta SCRATCH1
+	lda HGRROWS_L,x
+	sta SCRATCH0
+	ldy PARAM0
+	lda DIV7_2,y
+	tay
+
+	iny
+	lda #0
+	sta (SCRATCH0),y
+	iny
 	iny
 	lda #0
 	sta (SCRATCH0),y
@@ -881,7 +869,7 @@ BLACK_SHIFT4:
 	iny
 
 	RESTORE_AXY
-	rts	;Cycle count: 497, Optimized 26 rows.
+	rts	;Cycle count: 489, Optimized 27 rows.
 
 
 
@@ -917,12 +905,10 @@ BLACK_SHIFT5:
 	tay
 
 	iny
-	lda #0
-	sta (SCRATCH0),y
-	iny
 	iny
 	lda #0
 	sta (SCRATCH0),y
+	iny
 	iny
 	iny
 
@@ -1023,6 +1009,8 @@ BLACK_SHIFT5:
 	lda #0
 	sta (SCRATCH0),y
 	iny
+	lda #0
+	sta (SCRATCH0),y
 	iny
 	lda #0
 	sta (SCRATCH0),y
@@ -1042,8 +1030,6 @@ BLACK_SHIFT5:
 	lda #0
 	sta (SCRATCH0),y
 	iny
-	lda #0
-	sta (SCRATCH0),y
 	iny
 	lda #0
 	sta (SCRATCH0),y
@@ -1051,7 +1037,7 @@ BLACK_SHIFT5:
 	iny
 
 	RESTORE_AXY
-	rts	;Cycle count: 497, Optimized 26 rows.
+	rts	;Cycle count: 489, Optimized 27 rows.
 
 
 
@@ -1087,9 +1073,28 @@ BLACK_SHIFT6:
 	tay
 
 	iny
+	iny
 	lda #0
 	sta (SCRATCH0),y
 	iny
+	lda #0
+	sta (SCRATCH0),y
+	iny
+	iny
+
+	inx
+	lda HGRROWS_H1,x
+	sta SCRATCH1
+	lda HGRROWS_L,x
+	sta SCRATCH0
+	ldy PARAM0
+	lda DIV7_2,y
+	tay
+
+	iny
+	iny
+	lda #0
+	sta (SCRATCH0),y
 	iny
 	lda #0
 	sta (SCRATCH0),y
@@ -1148,8 +1153,6 @@ BLACK_SHIFT6:
 	tay
 
 	iny
-	lda #0
-	sta (SCRATCH0),y
 	iny
 	lda #0
 	sta (SCRATCH0),y
@@ -1169,30 +1172,9 @@ BLACK_SHIFT6:
 	tay
 
 	iny
-	lda #0
-	sta (SCRATCH0),y
 	iny
 	lda #0
 	sta (SCRATCH0),y
-	iny
-	lda #0
-	sta (SCRATCH0),y
-	iny
-	iny
-
-	inx
-	lda HGRROWS_H1,x
-	sta SCRATCH1
-	lda HGRROWS_L,x
-	sta SCRATCH0
-	ldy PARAM0
-	lda DIV7_2,y
-	tay
-
-	iny
-	lda #0
-	sta (SCRATCH0),y
-	iny
 	iny
 	lda #0
 	sta (SCRATCH0),y
@@ -1221,7 +1203,7 @@ BLACK_SHIFT6:
 	iny
 
 	RESTORE_AXY
-	rts	;Cycle count: 497, Optimized 26 rows.
+	rts	;Cycle count: 481, Optimized 28 rows.
 
 
 

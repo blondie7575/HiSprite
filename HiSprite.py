@@ -142,8 +142,7 @@ def byteStreamsFromPixels(pixelData,width,height,shift,bitDelegate,highBitDelega
 			bitChunk = bitChunk[::-1]
 			
 			# Determine palette bit from first pixel on each row
-			highBit = highBitDelegate(pixelData[row][0])
-			
+			highBit = highBitDelegate(pixelData,row,width)
 			byteSplits[byteIndex] = highBit + bitChunk
 			bitPos += 7
 			
@@ -267,17 +266,19 @@ def bitsForMask(pixel):
 	return "11"
 
 
-def highBitForColor(pixel):
+def highBitForColor(pixelData,rowIndex,width):
 
-	# Note that we prefer high-bit white because blue fringe is less noticeable than magenta.
-	highBit = "0"
-	if pixel == Colors.orange or pixel == Colors.blue or pixel == Colors.white:
-		highBit = "1"
+	for pixelIndex in range(width):
+		pixel = pixelColor(pixelData,rowIndex,pixelIndex)
+	
+		# Note that we prefer high-bit white because blue fringe is less noticeable than magenta.
+		if pixel == Colors.orange or pixel == Colors.blue or pixel == Colors.white:
+			return "1"
 
-	return highBit
+	return "0"
 
 
-def highBitForMask(pixel):
+def highBitForMask(pixelData,rowIndex,width):
 
 	return "1"
 
